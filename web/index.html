@@ -189,10 +189,51 @@
     }
     @keyframes spin{to{transform:rotate(360deg)}}
     .dim{opacity:.8;font-weight:900}
-  </style>
+ .page{display:none}
+.page.active{display:block} 
+</style>
 </head>
 
 <body class="wait">
+<!-- ===== MAIN MENU ===== -->
+<div id="mainMenu" class="menu">
+  <button onclick="openPage('signal')">📈 Pocket Signal</button>
+  <button onclick="openPage('chat')">💬 Pocket Chat</button>
+  <button onclick="openPage('ai')">🤖 AI Analiz</button>
+  <button onclick="openPage('edu')">📚 Statistika & Darslik</button>
+  <button onclick="openPage('settings')">⚙️ Setting</button>
+  <button onclick="openVip()">👑 Referral / VIP</button>
+<!-- ===== PAGES ===== -->
+<div id="pages">
+
+  <div id="page-signal" class="page active">
+    <!-- BU YERDA HOZIRGI SIGNAL UI TURADI -->
+  </div>
+
+  <div id="page-chat" class="page">
+    <h2>💬 Pocket Chat</h2>
+    <div id="chatBox"></div>
+    <input id="chatInput" placeholder="Xabar yoz..." />
+    <button onclick="sendChat()">Yuborish</button>
+  </div>
+
+  <div id="page-ai" class="page">
+    <h2>🤖 AI Analiz</h2>
+    <p>AI analiz keyin ulanadi.</p>
+  </div>
+
+  <div id="page-edu" class="page">
+    <h2>📚 Statistika & Darslik</h2>
+    <p>Darsliklar shu yerda.</p>
+  </div>
+
+  <div id="page-settings" class="page">
+    <h2>⚙️ Setting</h2>
+    <button onclick="toggleDark()">🌙 Dark Mode</button>
+  </div>
+
+</div>
+</div>
   <div class="hero">
     <canvas id="bg"></canvas>
     <div class="heroOverlay">
@@ -807,6 +848,25 @@
       requestAnimationFrame(animate);
     }
     animate();
-  </script>
+<script>
+function openPage(name){
+  document.querySelectorAll('.page').forEach(p=>{
+    p.classList.remove('active');
+  });
+
+  const page = document.getElementById('page-' + name);
+  if(page){
+    page.classList.add('active');
+  }
+}
+
+function openVip(){
+  alert("🔒 VIP faqat referral foydalanuvchilar uchun");
+}
+
+function toggleDark(){
+  document.body.classList.toggle('dark');
+}
+</script> 
 </body>
 </html>
