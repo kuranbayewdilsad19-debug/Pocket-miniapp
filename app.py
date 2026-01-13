@@ -1,12 +1,19 @@
 import os
-from flask import Flask, send_from_directory
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
-app = Flask(__name__, static_folder="web", static_url_path="")
+app = FastAPI()
 
-@app.route("/")
+# static web folder
+app.mount("/web", StaticFiles(directory="web"), name="web")
+
+@app.get("/")
 def index():
-    return send_from_directory("web", "index.html")
+    return FileResponse("web/index.html")
 
+# Render uchun
 if __name__ == "__main__":
+    import uvicorn
     port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port)
