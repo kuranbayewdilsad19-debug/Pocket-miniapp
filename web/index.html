@@ -1,457 +1,186 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Pocket MiniApp</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pocket App</title>
 
-  <style>
-    :root{
-      --bg:#070A12;
-      --card:rgba(255,255,255,.07);
-      --border:rgba(255,255,255,.12);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.70);
-      --blue:#3B82F6;
-      --blue2:#0EA5E9;
-      --radius:22px;
-      --shadow:0 18px 55px rgba(0,0,0,.55);
-      --buy:#22C55E;
-      --sell:#EF4444;
-      --wait:#F59E0B;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto}
-    .wrap{max-width:720px;margin:0 auto;padding:14px 14px 26px}
-
-    /* 3D HERO */
-    .hero{
-      position:relative; overflow:hidden; border-radius:26px;
-      border:1px solid var(--border);
-      background:
-        radial-gradient(900px 420px at 45% 10%, rgba(59,130,246,.35), transparent 55%),
-        radial-gradient(900px 420px at 80% 0%, rgba(14,165,233,.22), transparent 60%),
-        linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.65));
-      box-shadow:var(--shadow);
-      padding:18px;
-      margin-top:10px;
-    }
-    .hero3d{
-      position:absolute; inset:-20px; opacity:.55; filter:blur(.2px);
-      background:
-        radial-gradient(circle at 25% 30%, rgba(59,130,246,.55), transparent 40%),
-        radial-gradient(circle at 80% 20%, rgba(14,165,233,.35), transparent 45%),
-        radial-gradient(circle at 55% 80%, rgba(255,255,255,.12), transparent 50%);
-      transform:perspective(900px) rotateX(18deg);
-    }
-    .heroTop{position:relative; display:flex; gap:12px; align-items:center}
-    .logo{
-      width:46px;height:46px;border-radius:14px;
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.18);
-      display:grid;place-items:center;
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
-    }
-    .title{font-size:26px; font-weight:900; letter-spacing:.2px}
-    .sub{color:var(--muted); margin-top:2px; font-weight:600}
-
-    /* PAGES */
-    .page{display:none}
-    .page.active{display:block}
-
-    /* MENU (CENTER) */
-    .menuCenter{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-    .mBtn{
-      border:1px solid var(--border);
-      background:var(--card);
-      border-radius:18px;
-      padding:14px 12px;
-      box-shadow:0 10px 30px rgba(0,0,0,.30);
-      color:var(--text);
-      text-align:left;
-      font-weight:900;
-    }
-    .mBtn small{display:block; margin-top:6px; color:var(--muted); font-weight:700}
-    .mBtn:active{transform:scale(.99)}
-
-    /* TOP BAR inside pages */
-    .bar{
-      display:flex; align-items:center; gap:10px;
-      margin:14px 0 8px;
-    }
-    .back{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      border-radius:14px;
-      padding:10px 12px;
-      font-weight:900;
-    }
-    .barTitle{font-size:18px; font-weight:900}
-
-    /* CARD */
-    .card{
-      border:1px solid var(--border);
-      background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:14px;
-      margin-top:10px;
-    }
-
-    /* SIGNAL UI (avvalgi dizayn uslubida) */
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding:10px 12px; border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.18);
-      font-weight:900;
-    }
-    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    select,button,input{
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.22);
-      color:var(--text);
-      border-radius:14px;
-      padding:12px 12px;
-      font-weight:900;
-    }
-    .tfBtn{padding:10px 12px}
-    .tfRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    .bigBtn{
-      width:100%;
-      margin-top:12px;
-      padding:14px 14px;
-      border-radius:18px;
-      background:linear-gradient(90deg,var(--blue),var(--blue2));
-      border:0;
-      font-size:16px;
-    }
-    .hint{color:var(--muted);font-weight:700;line-height:1.35}
-/* ===== MENU 3D ===== */
-.menuWrap{
-  position:relative;
-  width:min(560px,92vw);
-  margin:18px auto 0;
-  padding:14px;
-  border-radius:22px;
-  background: rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.12);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 18px 60px rgba(0,0,0,.55);
-  transform-style: preserve-3d;
-  perspective: 900px;
-}
-
-.menuHeader{
-  padding:14px 14px 10px;
-  border-radius:18px;
-  background: radial-gradient(120% 120% at 30% 20%, rgba(59,130,246,.35), rgba(255,255,255,.06));
-  border:1px solid rgba(255,255,255,.12);
-  transform: translateZ(12px);
-}
-
-.menuHeader h1{margin:0;font-size:26px;letter-spacing:.3px}
-.menuHeader .sub{opacity:.75;margin-top:6px}
-
-.menuGrid{
-  margin-top:14px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  transform: translateZ(10px);
-}
-
-.menuBtn{
-  text-align:left;
-  padding:14px 14px;
-  border-radius:18px;
-  background: rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  color: rgba(255,255,255,.92);
-  cursor:pointer;
-  transform-style: preserve-3d;
-  transition: transform .12s ease, background .12s ease;
-  box-shadow: 0 10px 30px rgba(0,0,0,.35);
-  position:relative;
+<style>
+*{box-sizing:border-box;font-family:Inter,system-ui}
+body{
+  margin:0;
+  background:radial-gradient(1200px 600px at 50% -10%, #123a66, #05070c 70%);
+  color:#fff;
+  min-height:100vh;
   overflow:hidden;
 }
 
-.menuBtn::before{
-  content:"";
-  position:absolute; inset:-40%;
-  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.20), transparent 55%);
-  transform: translateZ(8px);
-  pointer-events:none;
+/* ===== 3D WRAP ===== */
+.wrap{
+  perspective:1000px;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.card{
+  width:92%;
+  max-width:420px;
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(14px);
+  border-radius:26px;
+  padding:22px;
+  transform-style:preserve-3d;
+  transition:transform .15s ease;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
 }
 
-.menuBtn:hover{background: rgba(255,255,255,.08)}
-.menuBtn:active{transform: translateY(2px) scale(.99)}
-
-.menuBtn .t{font-weight:900; font-size:16px}
-.menuBtn .d{opacity:.72; margin-top:6px; font-size:13px}
-
-.bigBtn{grid-column:1 / -1}
-
-@keyframes floaty{
-  0%{transform: translateY(0) translateZ(0)}
-  50%{transform: translateY(-3px) translateZ(0)}
-  100%{transform: translateY(0) translateZ(0)}
+/* ===== HEADER ===== */
+.header{
+  background:linear-gradient(135deg,#2a78ff,#6dd6ff);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
 }
-.menuWrap{animation: floaty 3.6s ease-in-out infinite}
-  </style>
+.header h1{margin:0;font-size:22px}
+.header p{margin:6px 0 0;opacity:.9}
+
+/* ===== MENU ===== */
+.menu{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.btn{
+  background:rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:14px;
+  cursor:pointer;
+  transition:.15s;
+}
+.btn:hover{background:rgba(255,255,255,.14)}
+.btn b{display:block;font-size:15px}
+.btn span{font-size:12px;opacity:.75}
+
+/* ===== PAGES ===== */
+.page{display:none}
+.page.active{display:block}
+
+.back{
+  margin-bottom:12px;
+  cursor:pointer;
+  opacity:.8;
+}
+.back:hover{opacity:1}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
 
-    <!-- ===== MENU PAGE (AVVAL SHU OCHILADI) ===== -->
-    <div id="page-menu" class="page active">
-      <div class="hero">
-        <div class="hero3d"></div>
-        <div class="heroTop">
-          <div class="logo">💠</div>
-          <div>
-            <div class="title">Pocket App</div>
-            <div class="sub">Menu’dan bo‘lim tanlang</div>
-          </div>
-        </div>
+<div class="wrap" id="wrap">
+  <div class="card" id="card">
+
+    <!-- ===== MENU PAGE (AVVAL OCHILADI) ===== -->
+    <div class="page active" id="menu">
+
+      <div class="header">
+        <h1>💎 Pocket App</h1>
+        <p>Menu’dan bo‘lim tanlang</p>
       </div>
 
-      <div class="menuCenter">
-        <button class="mBtn" onclick="go('signal')">📈 Pocket Signal
-          <small>Signal sahifasi</small>
-        </button>
-
-        <button class="mBtn" onclick="go('chat')">💬 Pocket Chat
-          <small>Ilova ichida chat</small>
-        </button>
-
-        <button class="mBtn" onclick="go('settings')">⚙️ Setting
-          <small>Dark mode va sozlama</small>
-        </button>
-
-        <button class="mBtn" onclick="go('refchat')">👥 Referal Chat
-          <small>Referal guruh/aloqa</small>
-        </button>
-
-        <button class="mBtn" onclick="go('vip')">👑 VIP Signal
-          <small>Faqat referallar uchun</small>
-        </button>
-
-        <button class="mBtn" onclick="go('ai')">🤖 AI Analiz
-          <small>Keyin ulaymiz</small>
-        </button>
-
-        <button class="mBtn" onclick="go('edu')">📚 Darslik & Statistika
-          <small>Grafik/darsliklar</small>
-        </button>
-      </div>
-    </div>
-
-    <!-- ===== 1) SIGNAL PAGE ===== -->
-    <div id="page-signal" class="page">
-      <div class="bar">
-        <button class="back" onclick="go('menu')">⬅ Menu</button>
-        <div class="barTitle">Pocket Signal</div>
-      </div>
-
-      <div class="card">
-        <div class="row">
-          <span class="pill">📌 Pair: <b id="pair">EURUSD</b></span>
-          <span class="pill">📊 RSI: <b id="rsi">—</b></span>
-          <span class="pill">📈 EMA200: <b id="ema">—</b></span>
-          <span class="pill">⚡ Signal: <b id="sig">WAIT</b></span>
+      <div class="menu">
+        <div class="btn" onclick="openPage('signal')">
+          <b>📈 Pocket Signal</b><span>Signal sahifasi</span>
         </div>
-
-        <div class="controls">
-          <select id="pairSel">
-            <option>EURUSD</option>
-            <option>EURJPY</option>
-            <option>GBPUSD</option>
-            <option>USDJPY</option>
-          </select>
-          <select id="tfSel">
-            <option value="M1">M1</option>
-            <option value="M5">M5</option>
-            <option value="M15">M15</option>
-          </select>
+        <div class="btn" onclick="openPage('chat')">
+          <b>💬 Pocket Chat</b><span>Ilova ichida chat</span>
         </div>
-
-        <div class="card" style="margin-top:12px">
-          <div class="hint">💡 Risk: 1 signal = balansning 2–3%<br/>Ketma-ket 2 LOSS bo‘lsa bot 10 daqiqa pauza qiladi (xavfsiz).</div>
+        <div class="btn" onclick="openPage('settings')">
+          <b>⚙️ Setting</b><span>Sozlamalar</span>
         </div>
-
-        <div class="tfRow">
-          <button class="tfBtn" onclick="setTF('M1')">M1</button>
-          <button class="tfBtn" onclick="setTF('M5')">M5</button>
-          <button class="tfBtn" onclick="setTF('M15')">M15</button>
+        <div class="btn" onclick="openPage('vip')">
+          <b>👑 VIP Signal</b><span>Referral uchun</span>
         </div>
-
-        <button class="bigBtn" onclick="demoSignal()">🚀 Signal olish</button>
-      </div>
-    </div>
-
-    <!-- ===== 2) CHAT PAGE ===== -->
-    <div id="page-chat" class="page">
-      <div class="bar">
-        <button class="back" onclick="go('menu')">⬅ Menu</button>
-        <div class="barTitle">Pocket Chat</div>
-      </div>
-
-      <div class="card">
-        <div id="chatBox" style="min-height:160px"></div>
-        <div style="margin-top:10px">
-          <input id="chatInput" placeholder="Xabar yoz..."/>
-          <button style="width:100%;margin-top:10px" onclick="sendChat()">Yuborish</button>
+        <div class="btn" onclick="openPage('ai')">
+          <b>🤖 AI Analiz</b><span>Keyin ulanadi</span>
+        </div>
+        <div class="btn" onclick="openPage('edu')">
+          <b>📚 Darslik & Stat</b><span>Grafik/darslar</span>
         </div>
       </div>
     </div>
 
-    <!-- ===== 3) SETTINGS ===== -->
-    <div id="page-settings" class="page">
-      <div class="bar">
-        <button class="back" onclick="go('menu')">⬅ Menu</button>
-        <div class="barTitle">Setting</div>
-      </div>
-
-      <div class="card">
-        <button style="width:100%" onclick="toggleDark()">🌙 Dark mode</button>
-      </div>
+    <!-- ===== SIGNAL ===== -->
+    <div class="page" id="signal">
+      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      <h2>📈 Pocket Signal</h2>
+      <p>Bu yerda signal UI bo‘ladi.</p>
     </div>
 
-    <!-- ===== 4) REFERAL CHAT ===== -->
-    <div id="page-refchat" class="page">
-      <div class="bar">
-        <button class="back" onclick="go('menu')">⬅ Menu</button>
-        <div class="barTitle">Referal Chat</div>
-      </div>
-
-      <div class="card">
-        Bu bo‘lim keyin ulanadi (referal chat link / ichki chat).
-      </div>
+    <!-- ===== CHAT ===== -->
+    <div class="page" id="chat">
+      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      <h2>💬 Pocket Chat</h2>
+      <p>Ilova ichida chat.</p>
     </div>
 
-    <!-- ===== 5) VIP (HOZIRCHA YOPIQ) ===== -->
-    <div id="page-vip" class="page">
-      <div class="bar">
-        <button class="back" onclick="go('menu')">⬅ Menu</button>
-        <div class="barTitle">VIP Signal</div>
-      </div>
-
-      <div class="card" id="vipBox">
-        🔒 VIP hozircha yopiq. Keyin “faqat referal” tekshiruv qo‘shamiz.
-      </div>
+    <!-- ===== SETTINGS ===== -->
+    <div class="page" id="settings">
+      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      <h2>⚙️ Setting</h2>
+      <button onclick="toggleDark()">🌙 Dark mode</button>
     </div>
 
-    <!-- ===== 6) AI ===== -->
-    <div id="page-ai" class="page">
-      <div class="bar">
-        <button class="back" onclick="go('menu')">⬅ Menu</button>
-        <div class="barTitle">AI Analiz</div>
-      </div>
-
-      <div class="card">
-        AI analiz keyin ulanadi.
-      </div>
+    <!-- ===== VIP ===== -->
+    <div class="page" id="vip">
+      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      <h2>👑 VIP Signal</h2>
+      <p>Faqat referallar uchun.</p>
     </div>
 
-    <!-- ===== 7) EDU / STAT ===== -->
-    <div id="page-edu" class="page">
-      <div class="bar">
-        <button class="back" onclick="go('menu')">⬅ Menu</button>
-        <div class="barTitle">Darslik & Statistika</div>
-      </div>
+    <!-- ===== AI ===== -->
+    <div class="page" id="ai">
+      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      <h2>🤖 AI Analiz</h2>
+      <p>Keyin ulanadi.</p>
+    </div>
 
-      <div class="card">
-        Darsliklar va statistik grafiklar keyin qo‘shiladi.
-      </div>
+    <!-- ===== EDU ===== -->
+    <div class="page" id="edu">
+      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      <h2>📚 Darslik & Statistika</h2>
+      <p>Grafik va darsliklar.</p>
     </div>
 
   </div>
+</div>
 
 <script>
-  function go(name){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.getElementById('page-'+name).classList.add('active');
-  }
+/* ===== PAGE SWITCH ===== */
+function openPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
-  // signal demo (hozircha)
-  function setTF(tf){
-    document.getElementById('tfSel').value = tf;
-  }
-  function demoSignal(){
-    const pair = document.getElementById('pairSel').value;
-    const tf = document.getElementById('tfSel').value;
-    document.getElementById('pair').textContent = pair + (tf==="M1" ? "" : "");
-    document.getElementById('rsi').textContent = Math.floor(40 + Math.random()*30);
-    document.getElementById('ema').textContent = (1 + Math.random()).toFixed(5);
-    document.getElementById('sig').textContent = "WAIT";
-  }
+/* ===== DARK ===== */
+function toggleDark(){
+  document.body.classList.toggle('dark');
+}
 
-  // chat demo (hozircha local)
-  function sendChat(){
-    const inp = document.getElementById('chatInput');
-    const text = inp.value.trim();
-    if(!text) return;
-    const box = document.getElementById('chatBox');
-    const div = document.createElement('div');
-    div.textContent = "• " + text;
-    div.style.margin = "8px 0";
-    box.appendChild(div);
-    inp.value = "";
-  }
+/* ===== 3D PARALLAX ===== */
+const wrap=document.getElementById('wrap');
+const card=document.getElementById('card');
 
-  function toggleDark(){
-    // hozir dark theme o'zi; keyin light qo'shamiz
-    alert("Dark mode hozir yoqilgan (keyin light qo‘shamiz).");
-  }
-<script>
-/* ===== MENU 3D tilt ===== */
-(function(){
-  const wrap = document.getElementById('mainMenu');
-  if(!wrap) return;
-
-  // touch/mouse parallax
-  function tilt(x,y){
-    wrap.style.transform =
-      `rotateX(${y}deg) rotateY(${x}deg) translateZ(0)`;
-  }
-
-  wrap.addEventListener('mousemove', (e)=>{
-    const r = wrap.getBoundingClientRect();
-    const cx = r.left + r.width/2;
-    const cy = r.top + r.height/2;
-    const dx = (e.clientX - cx) / (r.width/2);
-    const dy = (e.clientY - cy) / (r.height/2);
-    tilt((dx*6).toFixed(2), (-dy*6).toFixed(2));
-  });
-
-  wrap.addEventListener('mouseleave', ()=>{
-    wrap.style.transform = 'rotateX(0deg) rotateY(0deg)';
-  });
-
-  // mobile touch
-  wrap.addEventListener('touchmove', (e)=>{
-    const t = e.touches[0];
-    const r = wrap.getBoundingClientRect();
-    const cx = r.left + r.width/2;
-    const cy = r.top + r.height/2;
-    const dx = (t.clientX - cx) / (r.width/2);
-    const dy = (t.clientY - cy) / (r.height/2);
-    tilt((dx*5).toFixed(2), (-dy*5).toFixed(2));
-  }, {passive:true});
-
-  wrap.addEventListener('touchend', ()=>{
-    wrap.style.transform = 'rotateX(0deg) rotateY(0deg)';
-  });
-})();
+wrap.addEventListener('mousemove',e=>{
+  const r=card.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width-.5;
+  const y=(e.clientY-r.top)/r.height-.5;
+  card.style.transform=`rotateX(${ -y*8 }deg) rotateY(${ x*8 }deg)`;
+});
+wrap.addEventListener('mouseleave',()=>{
+  card.style.transform='rotateX(0) rotateY(0)';
+});
 </script>
+
 </body>
 </html>
