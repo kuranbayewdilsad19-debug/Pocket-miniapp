@@ -1,323 +1,545 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Pocket App</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Pocket Option Signal</title>
 
-<style>
-*{box-sizing:border-box;font-family:Inter,system-ui}
-body{
-  margin:0;
-  background:radial-gradient(1200px 600px at 50% -10%, #123a66, #05070c 70%);
-  color:#fff;
-  min-height:100vh;
-  overflow:hidden;
-}
+  <style>
+    :root{
+      --bg1:#061a2b;
+      --bg2:#050b14;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.09);
+      --stroke: rgba(255,255,255,.10);
+      --txt: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --blue1:#2b88ff;
+      --blue2:#73c9ff;
+      --shadow: 0 18px 45px rgba(0,0,0,.45);
+    }
 
-/* ===== 3D WRAP ===== */
-.wrap{
-  perspective:1000px;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.card{
-  width:92%;
-  max-width:420px;
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(14px);
-  border-radius:26px;
-  padding:22px;
-  transform-style:preserve-3d;
-  transition:transform .15s ease;
-  box-shadow:0 30px 80px rgba(0,0,0,.6);
-}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--txt);
+      background: radial-gradient(circle at 30% 10%, rgba(0,140,255,.20), transparent 55%),
+                  radial-gradient(circle at 80% 40%, rgba(0,180,255,.10), transparent 50%),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      overflow-x:hidden;
+    }
 
-/* ===== HEADER ===== */
-.header{
-  background:linear-gradient(135deg,#2a78ff,#6dd6ff);
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:16px;
-}
-.header h1{margin:0;font-size:22px}
-.header p{margin:6px 0 0;opacity:.9}
+    /* ===== TOP FULLSCREEN 3D BG CANVAS ===== */
+    #topHero3D{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+    }
+    #topBg3D{
+      width:100%;
+      height:100%;
+      display:block;
+      opacity:.95;
+    }
 
-/* ===== MENU ===== */
-.menu{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.btn{
-  background:rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:14px;
-  cursor:pointer;
-  transition:.15s;
-}
-.btn:hover{background:rgba(255,255,255,.14)}
-.btn b{display:block;font-size:15px}
-.btn span{font-size:12px;opacity:.75}
+    /* ===== CONTENT LAYER ===== */
+    .wrap{
+      position:relative;
+      z-index:2;
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
 
-/* ===== PAGES ===== */
-.page{display:none}
-.page.active{display:block}
+    .card{
+      width:min(520px, 100%);
+      border-radius:28px;
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding:18px;
+      transform-style: preserve-3d;
+      transition: transform .14s ease;
+    }
 
-.back{
-  margin-bottom:12px;
-  cursor:pointer;
-  opacity:.8;
-}
-.back:hover{opacity:1}
-#topHero3D{
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 30% 15%, rgba(0,140,255,.22), transparent 55%),
-              radial-gradient(circle at 70% 40%, rgba(0,90,255,.18), transparent 60%),
-              linear-gradient(180deg, #061a2b, #050b14 70%);
-}
-#topBg3D{
-  width: 100%;
-  height: 100%;
-  display:block;
-  opacity: .95;
-}
-.wrap{
-  position: relative;
-  z-index: 2;
-}
-#topHero3D{
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
+    /* ===== TOP ORB HEADER (ROUND + PARTICLES) ===== */
+    .hero{
+      position:relative;
+      border-radius:22px;
+      padding:16px 16px;
+      background: linear-gradient(135deg, rgba(35,120,255,.75), rgba(115,201,255,.55));
+      border:1px solid rgba(255,255,255,.18);
+      overflow:hidden;
+      box-shadow: 0 12px 28px rgba(0,0,0,.35);
+      transform: translateZ(12px);
+    }
+    .heroRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .orb{
+      width:52px;height:52px;
+      border-radius:50%;
+      position:relative;
+      flex:0 0 52px;
+      background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.9), rgba(255,255,255,.05) 35%, rgba(0,0,0,.0) 60%),
+                  radial-gradient(circle at 50% 50%, rgba(0,180,255,.85), rgba(0,60,120,.3) 60%, rgba(0,0,0,0) 70%);
+      box-shadow: inset 0 0 22px rgba(255,255,255,.18), 0 10px 20px rgba(0,0,0,.35);
+      transform: translateZ(18px);
+    }
+    .orb::before{
+      content:"";
+      position:absolute;
+      inset:-12px;
+      border-radius:50%;
+      background: conic-gradient(from 0deg, rgba(255,255,255,.0), rgba(255,255,255,.35), rgba(255,255,255,.0));
+      filter: blur(1px);
+      opacity:.55;
+      animation: spin 2.8s linear infinite;
+    }
+    .orb::after{
+      content:"";
+      position:absolute;
+      inset:-22px;
+      border-radius:50%;
+      border:1px dashed rgba(255,255,255,.18);
+      opacity:.35;
+      animation: spin 4.2s linear infinite reverse;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-#topBg3D{
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+    .heroText .title{
+      font-size:26px;
+      font-weight:900;
+      letter-spacing:.2px;
+      line-height:1.1;
+      text-shadow: 0 10px 18px rgba(0,0,0,.22);
+    }
+    .heroText .sub{
+      margin-top:6px;
+      font-size:14px;
+      opacity:.9;
+    }
 
-.wrap{
-  position: relative;
-  z-index: 2;
-}
-</style>
+    .heroHint{
+      margin-top:10px;
+      font-size:12px;
+      opacity:.85;
+    }
+
+    /* small floating particles inside header */
+    .heroCanvas{
+      position:absolute;
+      inset:0;
+      opacity:.55;
+      pointer-events:none;
+      mix-blend-mode: screen;
+    }
+
+    /* ===== MENU BUTTONS GRID ===== */
+    .grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    .btn{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius:18px;
+      padding:14px;
+      cursor:pointer;
+      user-select:none;
+      transform-style: preserve-3d;
+      transition: transform .12s ease, background .12s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .btn::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.20), rgba(255,255,255,0) 55%);
+      transform: translateZ(8px);
+      pointer-events:none;
+    }
+    .btn:hover{ background: var(--card2); }
+    .btn:active{ transform: translateY(2px) scale(.99); }
+
+    .btn b{
+      display:block;
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .btn span{
+      display:block;
+      margin-top:6px;
+      font-size:13px;
+      opacity:.74;
+    }
+
+    .btn.big{ grid-column:1 / -1; }
+
+    /* ===== PAGES ===== */
+    .page{ display:none; }
+    .page.active{ display:block; }
+
+    .topBar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 6px 2px;
+      transform: translateZ(10px);
+    }
+    .back{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      cursor:pointer;
+      user-select:none;
+      transition: .12s;
+    }
+    .back:hover{ background: rgba(255,255,255,.09); }
+    .pill{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-size:12px;
+      opacity:.9;
+    }
+
+    .contentBox{
+      margin-top:10px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:14px;
+      min-height: 160px;
+      transform: translateZ(10px);
+    }
+
+    .contentBox h2{
+      margin:0 0 10px;
+      font-size:18px;
+    }
+    .contentBox p{
+      margin:0;
+      opacity:.78;
+      line-height:1.5;
+    }
+
+    /* subtle float */
+    @keyframes floaty{
+      0%{transform: translateY(0)}
+      50%{transform: translateY(-4px)}
+      100%{transform: translateY(0)}
+    }
+    .card{ animation: floaty 3.6s ease-in-out infinite; }
+
+    /* mobile */
+    @media (max-width:380px){
+      .heroText .title{font-size:22px}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 
 <body>
-  
-<div id="topHero3D">
+  <!-- FULL BG CANVAS -->
+  <div id="topHero3D">
     <canvas id="topBg3D"></canvas>
   </div>
-<div class="wrap" id="wrap">
-  <div class="card" id="card">
 
-    <!-- ===== MENU PAGE (AVVAL OCHILADI) ===== -->
-    <div class="page active" id="menu">
+  <div class="wrap" id="wrap">
+    <div class="card" id="card">
 
-      <div class="header">
-        <h1>💎 Pocket App</h1>
-        <p>Menu’dan bo‘lim tanlang</p>
+      <!-- MENU PAGE -->
+      <div class="page active" id="menu">
+        <div class="hero" id="heroTap">
+          <canvas class="heroCanvas" id="heroCanvas"></canvas>
+          <div class="heroRow">
+            <div class="orb" id="orb"></div>
+            <div class="heroText">
+              <div class="title" id="heroTitle">Pocket Menu</div>
+              <div class="sub" id="heroSub">Menudan bo‘lim tanlang</div>
+            </div>
+          </div>
+          <div class="heroHint" id="heroHint">Barmoq bilan suring — 3D. Tepaga bos — text o‘zgaradi.</div>
+        </div>
+
+        <div class="grid">
+          <div class="btn" onclick="openPage('signal')"><b>📈 Pocket Signal</b><span>Signal sahifasi</span></div>
+          <div class="btn" onclick="openPage('chat')"><b>💬 Pocket Chat</b><span>Ilova ichida chat</span></div>
+
+          <div class="btn" onclick="openPage('settings')"><b>⚙️ Setting</b><span>Sozlamalar</span></div>
+          <div class="btn" onclick="openPage('vip')"><b>👑 VIP Signal</b><span>Referral uchun</span></div>
+
+          <div class="btn" onclick="openPage('ai')"><b>🤖 AI Analiz</b><span>Keyin ulanadi</span></div>
+          <div class="btn" onclick="openPage('edu')"><b>📚 Darslik & Stat</b><span>Grafik/darslar</span></div>
+
+          <div class="btn big" onclick="openPage('about')"><b>ℹ️ Info</b><span>Qisqa ma’lumot</span></div>
+        </div>
       </div>
 
-      <div class="menu">
-        <div class="btn" onclick="openPage('signal')">
-          <b>📈 Pocket Signal</b><span>Signal sahifasi</span>
+      <!-- SIGNAL PAGE -->
+      <div class="page" id="signal">
+        <div class="topBar">
+          <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+          <div class="pill">Pocket Signal</div>
         </div>
-        <div class="btn" onclick="openPage('chat')">
-          <b>💬 Pocket Chat</b><span>Ilova ichida chat</span>
-        </div>
-        <div class="btn" onclick="openPage('settings')">
-          <b>⚙️ Setting</b><span>Sozlamalar</span>
-        </div>
-        <div class="btn" onclick="openPage('vip')">
-          <b>👑 VIP Signal</b><span>Referral uchun</span>
-        </div>
-        <div class="btn" onclick="openPage('ai')">
-          <b>🤖 AI Analiz</b><span>Keyin ulanadi</span>
-        </div>
-        <div class="btn" onclick="openPage('edu')">
-          <b>📚 Darslik & Stat</b><span>Grafik/darslar</span>
+        <div class="contentBox">
+          <h2>📈 Signal sahifasi</h2>
+          <p>Bu yerga keyin signal formatini, aktivlar ro‘yxatini, timeframe (M1/M5...) va signal tarixini qo‘shamiz.</p>
         </div>
       </div>
-    </div>
 
-    <!-- ===== SIGNAL ===== -->
-    <div class="page" id="signal">
-      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      <h2>📈 Pocket Signal</h2>
-      <p>Bu yerda signal UI bo‘ladi.</p>
-    </div>
+      <!-- CHAT PAGE -->
+      <div class="page" id="chat">
+        <div class="topBar">
+          <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+          <div class="pill">Pocket Chat</div>
+        </div>
+        <div class="contentBox">
+          <h2>💬 Ilova ichida chat</h2>
+          <p>Bu sahifaga chat iframe / link / Telegram chat ochishni qo‘shamiz.</p>
+        </div>
+      </div>
 
-    <!-- ===== CHAT ===== -->
-    <div class="page" id="chat">
-      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      <h2>💬 Pocket Chat</h2>
-      <p>Ilova ichida chat.</p>
-    </div>
+      <!-- SETTINGS PAGE -->
+      <div class="page" id="settings">
+        <div class="topBar">
+          <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+          <div class="pill">Setting</div>
+        </div>
+        <div class="contentBox">
+          <h2>⚙️ Sozlamalar</h2>
+          <p>Keyin bu yerga Dark/Light, til tanlash, bildirishnoma sozlamalari qo‘shiladi.</p>
+        </div>
+      </div>
 
-    <!-- ===== SETTINGS ===== -->
-    <div class="page" id="settings">
-      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      <h2>⚙️ Setting</h2>
-      <button onclick="toggleDark()">🌙 Dark mode</button>
-    </div>
+      <!-- VIP PAGE -->
+      <div class="page" id="vip">
+        <div class="topBar">
+          <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+          <div class="pill">VIP Signal</div>
+        </div>
+        <div class="contentBox">
+          <h2>👑 VIP Signal</h2>
+          <p>Referral/obuna orqali VIP sahifani keyin ulaymiz.</p>
+        </div>
+      </div>
 
-    <!-- ===== VIP ===== -->
-    <div class="page" id="vip">
-      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      <h2>👑 VIP Signal</h2>
-      <p>Faqat referallar uchun.</p>
-    </div>
+      <!-- AI PAGE -->
+      <div class="page" id="ai">
+        <div class="topBar">
+          <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+          <div class="pill">AI Analiz</div>
+        </div>
+        <div class="contentBox">
+          <h2>🤖 AI Analiz</h2>
+          <p>Bu yerga keyin AI tahlil blokini ulaymiz (signal helper, trend, RSI...).</p>
+        </div>
+      </div>
 
-    <!-- ===== AI ===== -->
-    <div class="page" id="ai">
-      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      <h2>🤖 AI Analiz</h2>
-      <p>Keyin ulanadi.</p>
-    </div>
+      <!-- EDU PAGE -->
+      <div class="page" id="edu">
+        <div class="topBar">
+          <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+          <div class="pill">Darslik & Stat</div>
+        </div>
+        <div class="contentBox">
+          <h2>📚 Darslik & Stat</h2>
+          <p>Bu yerga darsliklar, grafiklar, indikator tushuntirishlar joylanadi.</p>
+        </div>
+      </div>
 
-    <!-- ===== EDU ===== -->
-    <div class="page" id="edu">
-      <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      <h2>📚 Darslik & Statistika</h2>
-      <p>Grafik va darsliklar.</p>
-    </div>
+      <!-- ABOUT PAGE -->
+      <div class="page" id="about">
+        <div class="topBar">
+          <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+          <div class="pill">Info</div>
+        </div>
+        <div class="contentBox">
+          <h2>ℹ️ Info</h2>
+          <p>Miniapp: menyu + sahifalar + 3D animatsiya. Endi funksiyalarni ulash qoladi.</p>
+        </div>
+      </div>
 
+    </div>
   </div>
-</div>
 
-<script>
-/* ===== PAGE SWITCH ===== */
-function openPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+  <script>
+    /* ===== PAGE SWITCH ===== */
+    function openPage(id){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      const el = document.getElementById(id);
+      if(el) el.classList.add('active');
+    }
 
-/* ===== DARK ===== */
-function toggleDark(){
-  document.body.classList.toggle('dark');
-}
-/* ===== 3D PARALLAX (TELEGRAM/PHONE SUPPORT) ===== */
-const wrap = document.getElementById('wrap');
-const card = document.getElementById('card');
+    /* ===== 3D CARD PARALLAX (PHONE + MOUSE) ===== */
+    const wrap = document.getElementById('wrap');
+    const card = document.getElementById('card');
 
-function applyTilt(dx, dy){
-  const max = 10; // kuchi
-  card.style.transform = `rotateX(${(-dy*max).toFixed(2)}deg) rotateY(${(dx*max).toFixed(2)}deg) translateZ(0)`;
-}
+    function applyTilt(dx, dy){
+      const max = 10;
+      const rx = (-dy*max).toFixed(2);
+      const ry = ( dx*max).toFixed(2);
+      card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+    }
+    function resetTilt(){
+      card.style.transform = `rotateX(0deg) rotateY(0deg) translateZ(0)`;
+    }
 
-function resetTilt(){
-  card.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0)';
-}
+    // mouse
+    wrap.addEventListener('mousemove', (e)=>{
+      const r = card.getBoundingClientRect();
+      const cx = r.left + r.width/2;
+      const cy = r.top + r.height/2;
+      const dx = (e.clientX - cx) / (r.width/2);
+      const dy = (e.clientY - cy) / (r.height/2);
+      applyTilt(dx, dy);
+    });
+    wrap.addEventListener('mouseleave', resetTilt);
 
-/* mouse (PC) */
-wrap.addEventListener('mousemove', (e)=>{
-  const r = card.getBoundingClientRect();
-  const dx = (e.clientX - (r.left + r.width/2)) / (r.width/2);
-  const dy = (e.clientY - (r.top + r.height/2)) / (r.height/2);
-  applyTilt(dx, dy);
-});
-wrap.addEventListener('mouseleave', resetTilt);
+    // touch
+    wrap.addEventListener('touchmove', (e)=>{
+      const t = e.touches[0];
+      const r = card.getBoundingClientRect();
+      const cx = r.left + r.width/2;
+      const cy = r.top + r.height/2;
+      const dx = (t.clientX - cx) / (r.width/2);
+      const dy = (t.clientY - cy) / (r.height/2);
+      applyTilt(dx, dy);
+    }, {passive:true});
+    wrap.addEventListener('touchend', resetTilt);
 
-/* touch (PHONE / Telegram) */
-wrap.addEventListener('touchmove', (e)=>{
-  const t = e.touches[0];
-  const r = card.getBoundingClientRect();
-  const dx = (t.clientX - (r.left + r.width/2)) / (r.width/2);
-  const dy = (t.clientY - (r.top + r.height/2)) / (r.height/2);
-  applyTilt(dx, dy);
-},{passive:true});
-<script>
-wrap.addEventListener('touchend', resetTilt);
-const canvas = document.getElementById('topBg3D');
-const ctx = canvas.getContext('2d');
+    /* ===== HERO TITLE TEXT CHANGE (TAP) ===== */
+    const heroTitle = document.getElementById('heroTitle');
+    const heroSub = document.getElementById('heroSub');
+    const heroTap = document.getElementById('heroTap');
 
-function resize(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
+    const phrases = [
+      {t:"Pocket Menu", s:"Menudan bo‘lim tanlang"},
+      {t:"Signal Center", s:"Aniq kirish nuqtasi"},
+      {t:"3D Mode ON", s:"Barmoq bilan suring"},
+      {t:"VIP & Referral", s:"Premium bo‘lim"},
+      {t:"AI Analiz", s:"Keyin ulaymiz"}
+    ];
+    let pi = 0;
+    heroTap.addEventListener('click', ()=>{
+      pi = (pi+1) % phrases.length;
+      heroTitle.textContent = phrases[pi].t;
+      heroSub.textContent = phrases[pi].s;
+    });
 
-const dots = Array.from({length:60}, () => ({
-  x: Math.random()*canvas.width,
-  y: Math.random()*canvas.height,
-  r: Math.random()*2+1,
-  vx: (Math.random()-.5)*0.3,
-  vy: (Math.random()-.5)*0.3
-}));
+    /* ===== TOP FULLSCREEN BG CANVAS (particles) ===== */
+    const bg = document.getElementById('topBg3D');
+    const bctx = bg.getContext('2d');
 
-let t = 0;
+    function bgResize(){
+      bg.width = window.innerWidth;
+      bg.height = window.innerHeight;
+    }
+    bgResize();
+    window.addEventListener('resize', bgResize);
 
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  t += 0.01;
+    const bgDots = Array.from({length: 90}, () => ({
+      x: Math.random()*bg.width,
+      y: Math.random()*bg.height,
+      r: Math.random()*2.2+0.6,
+      vx: (Math.random()-.5)*0.35,
+      vy: (Math.random()-.5)*0.35,
+      a: Math.random()*0.5+0.25
+    }));
 
-  dots.forEach(d=>{
-    d.x += d.vx;
-    d.y += d.vy + Math.sin(t)*0.05;
+    let bt = 0;
+    function bgDraw(){
+      bt += 0.008;
+      bctx.clearRect(0,0,bg.width,bg.height);
 
-    if(d.x<0||d.x>canvas.width) d.vx*=-1;
-    if(d.y<0||d.y>canvas.height) d.vy*=-1;
+      // soft glow
+      const g = bctx.createRadialGradient(bg.width*0.25,bg.height*0.15, 10, bg.width*0.25,bg.height*0.15, bg.width*0.75);
+      g.addColorStop(0, 'rgba(0,180,255,0.18)');
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      bctx.fillStyle = g;
+      bctx.fillRect(0,0,bg.width,bg.height);
 
-    ctx.beginPath();
-    ctx.arc(d.x, d.y, d.r, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(0,180,255,.6)';
-    ctx.fill();
-  });
+      bgDots.forEach(d=>{
+        d.x += d.vx;
+        d.y += d.vy + Math.sin(bt)*0.08;
 
-  requestAnimationFrame(draw);
-}
-draw();
-<script>
-const canvas = document.getElementById('topBg3D');
-const ctx = canvas.getContext('2d');
+        if(d.x<0||d.x>bg.width) d.vx *= -1;
+        if(d.y<0||d.y>bg.height) d.vy *= -1;
 
-function resize(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
+        bctx.beginPath();
+        bctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+        bctx.fillStyle = `rgba(0,180,255,${d.a})`;
+        bctx.fill();
+      });
 
-const dots = Array.from({length:60}, () => ({
-  x: Math.random()*canvas.width,
-  y: Math.random()*canvas.height,
-  r: Math.random()*2+1,
-  vx: (Math.random()-.5)*0.3,
-  vy: (Math.random()-.5)*0.3
-}));
+      requestAnimationFrame(bgDraw);
+    }
+    bgDraw();
 
-let t = 0;
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  t+=0.01;
+    /* ===== HERO INSIDE CANVAS (round particles over header) ===== */
+    const hc = document.getElementById('heroCanvas');
+    const hctx = hc.getContext('2d');
 
-  dots.forEach(d=>{
-    d.x+=d.vx;
-    d.y+=d.vy+Math.sin(t)*0.05;
+    function heroResize(){
+      const r = heroTap.getBoundingClientRect();
+      hc.width = Math.max(1, Math.floor(r.width));
+      hc.height = Math.max(1, Math.floor(r.height));
+    }
+    heroResize();
+    window.addEventListener('resize', heroResize);
 
-    if(d.x<0||d.x>canvas.width) d.vx*=-1;
-    if(d.y<0||d.y>canvas.height) d.vy*=-1;
+    const heroDots = Array.from({length: 26}, ()=>({
+      x: Math.random()*hc.width,
+      y: Math.random()*hc.height,
+      r: Math.random()*2+0.8,
+      vx: (Math.random()-.5)*0.25,
+      vy: (Math.random()-.5)*0.25
+    }));
 
-    ctx.beginPath();
-    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
-    ctx.fillStyle='rgba(0,180,255,.6)';
-    ctx.fill();
-  });
+    let ht=0;
+    function heroDraw(){
+      ht += 0.02;
+      hctx.clearRect(0,0,hc.width,hc.height);
 
-  requestAnimationFrame(draw);
-}
-draw();
-</script>
+      heroDots.forEach(d=>{
+        d.x += d.vx;
+        d.y += d.vy + Math.sin(ht)*0.05;
 
+        if(d.x<0||d.x>hc.width) d.vx *= -1;
+        if(d.y<0||d.y>hc.height) d.vy *= -1;
+
+        hctx.beginPath();
+        hctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+        hctx.fillStyle = 'rgba(255,255,255,0.22)';
+        hctx.fill();
+      });
+
+      requestAnimationFrame(heroDraw);
+    }
+    heroDraw();
+
+    // keep hero canvas size correct when card floats
+    setInterval(heroResize, 900);
+  </script>
 </body>
 </html>
