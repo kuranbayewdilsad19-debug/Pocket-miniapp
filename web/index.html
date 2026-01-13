@@ -166,20 +166,38 @@ function openPage(id){
 function toggleDark(){
   document.body.classList.toggle('dark');
 }
+/* ===== 3D PARALLAX (TELEGRAM/PHONE SUPPORT) ===== */
+const wrap = document.getElementById('wrap');
+const card = document.getElementById('card');
 
-/* ===== 3D PARALLAX ===== */
-const wrap=document.getElementById('wrap');
-const card=document.getElementById('card');
+function applyTilt(dx, dy){
+  const max = 10; // kuchi
+  card.style.transform = `rotateX(${(-dy*max).toFixed(2)}deg) rotateY(${(dx*max).toFixed(2)}deg) translateZ(0)`;
+}
 
-wrap.addEventListener('mousemove',e=>{
-  const r=card.getBoundingClientRect();
-  const x=(e.clientX-r.left)/r.width-.5;
-  const y=(e.clientY-r.top)/r.height-.5;
-  card.style.transform=`rotateX(${ -y*8 }deg) rotateY(${ x*8 }deg)`;
+function resetTilt(){
+  card.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0)';
+}
+
+/* mouse (PC) */
+wrap.addEventListener('mousemove', (e)=>{
+  const r = card.getBoundingClientRect();
+  const dx = (e.clientX - (r.left + r.width/2)) / (r.width/2);
+  const dy = (e.clientY - (r.top + r.height/2)) / (r.height/2);
+  applyTilt(dx, dy);
 });
-wrap.addEventListener('mouseleave',()=>{
-  card.style.transform='rotateX(0) rotateY(0)';
-});
+wrap.addEventListener('mouseleave', resetTilt);
+
+/* touch (PHONE / Telegram) */
+wrap.addEventListener('touchmove', (e)=>{
+  const t = e.touches[0];
+  const r = card.getBoundingClientRect();
+  const dx = (t.clientX - (r.left + r.width/2)) / (r.width/2);
+  const dy = (t.clientY - (r.top + r.height/2)) / (r.height/2);
+  applyTilt(dx, dy);
+},{passive:true});
+
+wrap.addEventListener('touchend', resetTilt);
 </script>
 
 </body>
