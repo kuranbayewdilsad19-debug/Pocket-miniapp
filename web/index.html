@@ -1,382 +1,250 @@
-<!doctype html>
+cd ~/pocket-miniapp-bot
+
+cat > web/index.html <<'EOF'
+<!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>Pocket Option Signal</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Pocket MiniApp</title>
 
   <style>
     :root{
       --bg1:#061a2b;
-      --bg2:#050b14;
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.09);
-      --stroke: rgba(255,255,255,.10);
+      --bg2:#0a2b57;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.12);
       --txt: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
-      --blue1:#2b88ff;
-      --blue2:#73c9ff;
-      --shadow: 0 18px 45px rgba(0,0,0,.45);
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
       margin:0;
       font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--txt);
-      background: radial-gradient(circle at 30% 10%, rgba(0,140,255,.20), transparent 55%),
-                  radial-gradient(circle at 80% 40%, rgba(0,180,255,.10), transparent 50%),
-                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      color: var(--txt);
+      background: radial-gradient(1200px 600px at 30% 0%, #103a7a 0%, transparent 55%),
+                  radial-gradient(900px 500px at 75% 25%, #0c2f55 0%, transparent 55%),
+                  linear-gradient(180deg, var(--bg2), var(--bg1));
+      min-height: 100vh;
       overflow-x:hidden;
     }
 
-    /* ===== TOP FULLSCREEN 3D BG CANVAS ===== */
+    /* ===== TOP HEADER FX (FAKAT YUQORI BO'SH JOY) ===== */
     #topHero3D{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 190px;
+      z-index: 0;
+      background: linear-gradient(180deg, #0b3474, #061a2b);
+      overflow:hidden;
     }
-    #topBg3D{
+    #heroFx{
       width:100%;
       height:100%;
       display:block;
       opacity:.95;
     }
 
-    /* ===== CONTENT LAYER ===== */
+    /* ASOSIY CONTENT yuqoridan tushib ketmasin */
     .wrap{
-      position:relative;
-      z-index:2;
-      min-height:100%;
+      position: relative;
+      z-index: 2;
+      padding: 18px 14px 26px;
+      padding-top: 150px; /* topHero uchun joy */
       display:flex;
-      align-items:center;
       justify-content:center;
-      padding:18px;
     }
 
     .card{
-      width:min(520px, 100%);
-      border-radius:28px;
-      background: rgba(0,0,0,.28);
-      border: 1px solid rgba(255,255,255,.08);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding:18px;
-      transform-style: preserve-3d;
-      transition: transform .14s ease;
-    }
-
-    /* ===== TOP ORB HEADER (ROUND + PARTICLES) ===== */
-    .hero{
-      position:relative;
-      border-radius:22px;
-      padding:16px 16px;
-      background: linear-gradient(135deg, rgba(35,120,255,.75), rgba(115,201,255,.55));
-      border:1px solid rgba(255,255,255,.18);
+      width: min(520px, 100%);
+      border-radius: 26px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       overflow:hidden;
-      box-shadow: 0 12px 28px rgba(0,0,0,.35);
-      transform: translateZ(12px);
-    }
-    .heroRow{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-    .orb{
-      width:52px;height:52px;
-      border-radius:50%;
-      position:relative;
-      flex:0 0 52px;
-      background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.9), rgba(255,255,255,.05) 35%, rgba(0,0,0,.0) 60%),
-                  radial-gradient(circle at 50% 50%, rgba(0,180,255,.85), rgba(0,60,120,.3) 60%, rgba(0,0,0,0) 70%);
-      box-shadow: inset 0 0 22px rgba(255,255,255,.18), 0 10px 20px rgba(0,0,0,.35);
-      transform: translateZ(18px);
-    }
-    .orb::before{
-      content:"";
-      position:absolute;
-      inset:-12px;
-      border-radius:50%;
-      background: conic-gradient(from 0deg, rgba(255,255,255,.0), rgba(255,255,255,.35), rgba(255,255,255,.0));
-      filter: blur(1px);
-      opacity:.55;
-      animation: spin 2.8s linear infinite;
-    }
-    .orb::after{
-      content:"";
-      position:absolute;
-      inset:-22px;
-      border-radius:50%;
-      border:1px dashed rgba(255,255,255,.18);
-      opacity:.35;
-      animation: spin 4.2s linear infinite reverse;
-    }
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    .heroText .title{
-      font-size:26px;
-      font-weight:900;
-      letter-spacing:.2px;
-      line-height:1.1;
-      text-shadow: 0 10px 18px rgba(0,0,0,.22);
-    }
-    .heroText .sub{
-      margin-top:6px;
-      font-size:14px;
-      opacity:.9;
-    }
-
-    .heroHint{
-      margin-top:10px;
-      font-size:12px;
-      opacity:.85;
-    }
-
-    /* small floating particles inside header */
-    .heroCanvas{
-      position:absolute;
-      inset:0;
-      opacity:.55;
-      pointer-events:none;
-      mix-blend-mode: screen;
-    }
-
-    /* ===== MENU BUTTONS GRID ===== */
-    .grid{
-      margin-top:16px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    .btn{
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      border-radius:18px;
-      padding:14px;
-      cursor:pointer;
-      user-select:none;
       transform-style: preserve-3d;
-      transition: transform .12s ease, background .12s ease;
-      position:relative;
+      transition: transform .12s ease;
+    }
+
+    .headerBox{
+      margin: 16px;
+      border-radius: 22px;
+      padding: 18px 18px;
+      background: linear-gradient(135deg, #2d7bff, #64c8ff);
+      color: rgba(255,255,255,.96);
+      border: 1px solid rgba(255,255,255,.25);
+      box-shadow: 0 18px 30px rgba(0,0,0,.18);
+      position: relative;
       overflow:hidden;
     }
-    .btn::before{
+    .headerBox:before{
       content:"";
-      position:absolute;
-      inset:-40%;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.20), rgba(255,255,255,0) 55%);
+      position:absolute; inset:-40%;
+      background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.35), transparent 55%);
       transform: translateZ(8px);
       pointer-events:none;
     }
-    .btn:hover{ background: var(--card2); }
-    .btn:active{ transform: translateY(2px) scale(.99); }
 
-    .btn b{
-      display:block;
-      font-size:16px;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .btn span{
-      display:block;
-      margin-top:6px;
-      font-size:13px;
-      opacity:.74;
+    .hTitle{font-size:34px; font-weight:900; letter-spacing:.2px; margin:0}
+    .hSub{margin:6px 0 0; color: rgba(255,255,255,.88); font-size:16px}
+    .hHint{margin:10px 0 0; color: rgba(255,255,255,.78); font-size:13px}
+
+    .menuGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 6px 16px 18px;
     }
 
-    .btn.big{ grid-column:1 / -1; }
+    .btn{
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 20px;
+      padding: 14px 14px;
+      cursor: pointer;
+      transition: transform .12s ease, background .12s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+      overflow:hidden;
+      position:relative;
+    }
+    .btn:hover{ background: rgba(255,255,255,.12) }
+    .btn:active{ transform: translateY(2px) scale(.99) }
+
+    .btn b{display:block; font-size:18px}
+    .btn span{display:block; margin-top:6px; font-size:13px; color: var(--muted)}
+
+    .bigBtn{
+      grid-column: 1 / -1;
+      background: rgba(255,255,255,.10);
+    }
 
     /* ===== PAGES ===== */
-    .page{ display:none; }
-    .page.active{ display:block; }
+    .page{display:none}
+    .page.active{display:block}
 
-    .topBar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px 6px 2px;
-      transform: translateZ(10px);
+    .pageInner{
+      padding: 10px 16px 18px;
     }
+
     .back{
       display:inline-flex;
       align-items:center;
       gap:8px;
+      margin: 0 0 10px;
       padding:10px 12px;
       border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
       cursor:pointer;
-      user-select:none;
-      transition: .12s;
-    }
-    .back:hover{ background: rgba(255,255,255,.09); }
-    .pill{
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      font-size:12px;
       opacity:.9;
     }
+    .back:active{ transform: translateY(1px) }
 
-    .contentBox{
-      margin-top:10px;
-      background: rgba(255,255,255,.05);
+    .box{
+      background: rgba(255,255,255,.07);
       border: 1px solid rgba(255,255,255,.10);
-      border-radius:18px;
-      padding:14px;
-      min-height: 160px;
-      transform: translateZ(10px);
-    }
-
-    .contentBox h2{
-      margin:0 0 10px;
-      font-size:18px;
-    }
-    .contentBox p{
-      margin:0;
-      opacity:.78;
-      line-height:1.5;
-    }
-
-    /* subtle float */
-    @keyframes floaty{
-      0%{transform: translateY(0)}
-      50%{transform: translateY(-4px)}
-      100%{transform: translateY(0)}
-    }
-    .card{ animation: floaty 3.6s ease-in-out infinite; }
-
-    /* mobile */
-    @media (max-width:380px){
-      .heroText .title{font-size:22px}
-      .grid{grid-template-columns:1fr}
+      border-radius: 18px;
+      padding: 14px;
     }
   </style>
 </head>
 
 <body>
-  <!-- FULL BG CANVAS -->
+
+  <!-- ===== TOP SPIRAL FX (FAKAT YUQORI QISM) ===== -->
   <div id="topHero3D">
-    <canvas id="topBg3D"></canvas>
+    <canvas id="heroFx"></canvas>
   </div>
 
+  <!-- ===== APP ===== -->
   <div class="wrap" id="wrap">
     <div class="card" id="card">
 
-      <!-- MENU PAGE -->
+      <!-- MENU -->
       <div class="page active" id="menu">
-        <div class="hero" id="heroTap">
-          <canvas class="heroCanvas" id="heroCanvas"></canvas>
-          <div class="heroRow">
-            <div class="orb" id="orb"></div>
-            <div class="heroText">
-              <div class="title" id="heroTitle">Pocket Menu</div>
-              <div class="sub" id="heroSub">Menudan bo‘lim tanlang</div>
-            </div>
+        <div class="headerBox" id="headerBox">
+          <h1 class="hTitle" id="heroTitle">Pocket Menu</h1>
+          <div class="hSub" id="heroSub">Menudan bo‘lim tanlang</div>
+          <div class="hHint" id="heroHint">Yuqorini bosing — portlaydi. (Spiral FX)</div>
+        </div>
+
+        <div class="menuGrid">
+          <div class="btn" onclick="openPage('signal')">
+            <b>📈 Pocket Signal</b><span>Signal sahifasi</span>
           </div>
-          <div class="heroHint" id="heroHint">Barmoq bilan suring — 3D. Tepaga bos — text o‘zgaradi.</div>
-        </div>
-
-        <div class="grid">
-          <div class="btn" onclick="openPage('signal')"><b>📈 Pocket Signal</b><span>Signal sahifasi</span></div>
-          <div class="btn" onclick="openPage('chat')"><b>💬 Pocket Chat</b><span>Ilova ichida chat</span></div>
-
-          <div class="btn" onclick="openPage('settings')"><b>⚙️ Setting</b><span>Sozlamalar</span></div>
-          <div class="btn" onclick="openPage('vip')"><b>👑 VIP Signal</b><span>Referral uchun</span></div>
-
-          <div class="btn" onclick="openPage('ai')"><b>🤖 AI Analiz</b><span>Keyin ulanadi</span></div>
-          <div class="btn" onclick="openPage('edu')"><b>📚 Darslik & Stat</b><span>Grafik/darslar</span></div>
-
-          <div class="btn big" onclick="openPage('about')"><b>ℹ️ Info</b><span>Qisqa ma’lumot</span></div>
+          <div class="btn" onclick="openPage('chat')">
+            <b>💬 Pocket Chat</b><span>Ilova ichida chat</span>
+          </div>
+          <div class="btn" onclick="openPage('settings')">
+            <b>⚙️ Setting</b><span>Sozlamalar</span>
+          </div>
+          <div class="btn" onclick="openPage('vip')">
+            <b>👑 VIP Signal</b><span>Referral uchun</span>
+          </div>
+          <div class="btn" onclick="openPage('ai')">
+            <b>🤖 AI Analiz</b><span>Keyin ulanadi</span>
+          </div>
+          <div class="btn" onclick="openPage('edu')">
+            <b>📚 Darslik & Stat</b><span>Grafik/darslar</span>
+          </div>
+          <div class="btn bigBtn" onclick="openPage('info')">
+            <b>ℹ️ Info</b><span>Qisqa ma’lumot</span>
+          </div>
         </div>
       </div>
 
-      <!-- SIGNAL PAGE -->
+      <!-- PAGES -->
       <div class="page" id="signal">
-        <div class="topBar">
+        <div class="pageInner">
           <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-          <div class="pill">Pocket Signal</div>
-        </div>
-        <div class="contentBox">
-          <h2>📈 Signal sahifasi</h2>
-          <p>Bu yerga keyin signal formatini, aktivlar ro‘yxatini, timeframe (M1/M5...) va signal tarixini qo‘shamiz.</p>
+          <div class="box">Bu yer Signal sahifasi.</div>
         </div>
       </div>
 
-      <!-- CHAT PAGE -->
       <div class="page" id="chat">
-        <div class="topBar">
+        <div class="pageInner">
           <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-          <div class="pill">Pocket Chat</div>
-        </div>
-        <div class="contentBox">
-          <h2>💬 Ilova ichida chat</h2>
-          <p>Bu sahifaga chat iframe / link / Telegram chat ochishni qo‘shamiz.</p>
+          <div class="box">Bu yer Chat sahifasi.</div>
         </div>
       </div>
 
-      <!-- SETTINGS PAGE -->
       <div class="page" id="settings">
-        <div class="topBar">
+        <div class="pageInner">
           <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-          <div class="pill">Setting</div>
-        </div>
-        <div class="contentBox">
-          <h2>⚙️ Sozlamalar</h2>
-          <p>Keyin bu yerga Dark/Light, til tanlash, bildirishnoma sozlamalari qo‘shiladi.</p>
+          <div class="box">Sozlamalar sahifasi.</div>
         </div>
       </div>
 
-      <!-- VIP PAGE -->
       <div class="page" id="vip">
-        <div class="topBar">
+        <div class="pageInner">
           <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-          <div class="pill">VIP Signal</div>
-        </div>
-        <div class="contentBox">
-          <h2>👑 VIP Signal</h2>
-          <p>Referral/obuna orqali VIP sahifani keyin ulaymiz.</p>
+          <div class="box">VIP bo‘limi.</div>
         </div>
       </div>
 
-      <!-- AI PAGE -->
       <div class="page" id="ai">
-        <div class="topBar">
+        <div class="pageInner">
           <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-          <div class="pill">AI Analiz</div>
-        </div>
-        <div class="contentBox">
-          <h2>🤖 AI Analiz</h2>
-          <p>Bu yerga keyin AI tahlil blokini ulaymiz (signal helper, trend, RSI...).</p>
+          <div class="box">AI Analiz (keyin ulanadi).</div>
         </div>
       </div>
 
-      <!-- EDU PAGE -->
       <div class="page" id="edu">
-        <div class="topBar">
+        <div class="pageInner">
           <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-          <div class="pill">Darslik & Stat</div>
-        </div>
-        <div class="contentBox">
-          <h2>📚 Darslik & Stat</h2>
-          <p>Bu yerga darsliklar, grafiklar, indikator tushuntirishlar joylanadi.</p>
+          <div class="box">Darslik & statistika.</div>
         </div>
       </div>
 
-      <!-- ABOUT PAGE -->
-      <div class="page" id="about">
-        <div class="topBar">
+      <div class="page" id="info">
+        <div class="pageInner">
           <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-          <div class="pill">Info</div>
-        </div>
-        <div class="contentBox">
-          <h2>ℹ️ Info</h2>
-          <p>Miniapp: menyu + sahifalar + 3D animatsiya. Endi funksiyalarni ulash qoladi.</p>
+          <div class="box">Info: miniapp haqida qisqa ma’lumot.</div>
         </div>
       </div>
 
@@ -391,21 +259,19 @@
       if(el) el.classList.add('active');
     }
 
-    /* ===== 3D CARD PARALLAX (PHONE + MOUSE) ===== */
+    /* ===== CARD 3D TILT (Ixtiyoriy, pastdagi menyuga xalaqit bermaydi) ===== */
     const wrap = document.getElementById('wrap');
     const card = document.getElementById('card');
 
     function applyTilt(dx, dy){
       const max = 10;
-      const rx = (-dy*max).toFixed(2);
-      const ry = ( dx*max).toFixed(2);
-      card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+      card.style.transform =
+        `rotateX(${(-dy*max).toFixed(2)}deg) rotateY(${(dx*max).toFixed(2)}deg) translateZ(0)`;
     }
     function resetTilt(){
-      card.style.transform = `rotateX(0deg) rotateY(0deg) translateZ(0)`;
+      card.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0)';
     }
 
-    // mouse
     wrap.addEventListener('mousemove', (e)=>{
       const r = card.getBoundingClientRect();
       const cx = r.left + r.width/2;
@@ -416,7 +282,6 @@
     });
     wrap.addEventListener('mouseleave', resetTilt);
 
-    // touch
     wrap.addEventListener('touchmove', (e)=>{
       const t = e.touches[0];
       const r = card.getBoundingClientRect();
@@ -428,118 +293,133 @@
     }, {passive:true});
     wrap.addEventListener('touchend', resetTilt);
 
-    /* ===== HERO TITLE TEXT CHANGE (TAP) ===== */
-    const heroTitle = document.getElementById('heroTitle');
+    /* ===== TOP SPIRAL + PARTICLES + BURST (FAKAT YUQORI QISM) ===== */
+    const fx = document.getElementById('heroFx');
+    const ctx = fx.getContext('2d');
+
+    function resizeFx(){
+      fx.width = Math.floor(fx.clientWidth);
+      fx.height = Math.floor(fx.clientHeight);
+    }
+    resizeFx();
+    window.addEventListener('resize', resizeFx);
+
+    let time = 0;
+    const sparks = [];
+
+    function burst(x, y){
+      for(let i=0;i<44;i++){
+        const a = Math.random()*Math.PI*2;
+        const s = 1.2 + Math.random()*3.3;
+        sparks.push({
+          x, y,
+          vx: Math.cos(a)*s,
+          vy: Math.sin(a)*s,
+          life: 1,
+          r: 1 + Math.random()*2.8
+        });
+      }
+    }
+
+    // Bosganda portlash + text o'zgarishi
     const heroSub = document.getElementById('heroSub');
-    const heroTap = document.getElementById('heroTap');
-
-    const phrases = [
-      {t:"Pocket Menu", s:"Menudan bo‘lim tanlang"},
-      {t:"Signal Center", s:"Aniq kirish nuqtasi"},
-      {t:"3D Mode ON", s:"Barmoq bilan suring"},
-      {t:"VIP & Referral", s:"Premium bo‘lim"},
-      {t:"AI Analiz", s:"Keyin ulaymiz"}
+    const texts = [
+      "Menudan bo‘lim tanlang",
+      "Spiral FX ishlayapti ✅",
+      "Bosganda portlash 💥",
+      "Yuqori qism — 3D animatsiya"
     ];
-    let pi = 0;
-    heroTap.addEventListener('click', ()=>{
-      pi = (pi+1) % phrases.length;
-      heroTitle.textContent = phrases[pi].t;
-      heroSub.textContent = phrases[pi].s;
-    });
+    let ti = 0;
 
-    /* ===== TOP FULLSCREEN BG CANVAS (particles) ===== */
-    const bg = document.getElementById('topBg3D');
-    const bctx = bg.getContext('2d');
-
-    function bgResize(){
-      bg.width = window.innerWidth;
-      bg.height = window.innerHeight;
+    function clickFx(e){
+      const r = fx.getBoundingClientRect();
+      const x = (e.clientX - r.left) * (fx.width / r.width);
+      const y = (e.clientY - r.top) * (fx.height / r.height);
+      burst(x,y);
+      ti = (ti+1)%texts.length;
+      heroSub.textContent = texts[ti];
     }
-    bgResize();
-    window.addEventListener('resize', bgResize);
 
-    const bgDots = Array.from({length: 90}, () => ({
-      x: Math.random()*bg.width,
-      y: Math.random()*bg.height,
-      r: Math.random()*2.2+0.6,
-      vx: (Math.random()-.5)*0.35,
-      vy: (Math.random()-.5)*0.35,
-      a: Math.random()*0.5+0.25
-    }));
+    fx.addEventListener('click', clickFx);
+    fx.addEventListener('touchstart', (e)=>{
+      const t = e.touches[0];
+      clickFx({clientX:t.clientX, clientY:t.clientY});
+    }, {passive:true});
 
-    let bt = 0;
-    function bgDraw(){
-      bt += 0.008;
-      bctx.clearRect(0,0,bg.width,bg.height);
+    function draw(){
+      time += 0.02;
+      ctx.clearRect(0,0,fx.width,fx.height);
 
-      // soft glow
-      const g = bctx.createRadialGradient(bg.width*0.25,bg.height*0.15, 10, bg.width*0.25,bg.height*0.15, bg.width*0.75);
-      g.addColorStop(0, 'rgba(0,180,255,0.18)');
-      g.addColorStop(1, 'rgba(0,0,0,0)');
-      bctx.fillStyle = g;
-      bctx.fillRect(0,0,bg.width,bg.height);
+      // Yumshoq tuman
+      const g = ctx.createRadialGradient(fx.width*0.25, fx.height*0.55, 10, fx.width*0.25, fx.height*0.55, fx.width*0.75);
+      g.addColorStop(0, "rgba(80,180,255,0.18)");
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,fx.width,fx.height);
 
-      bgDots.forEach(d=>{
-        d.x += d.vx;
-        d.y += d.vy + Math.sin(bt)*0.08;
+      // Spiral markazi chap tomonda chiroyli
+      const cx = fx.width * 0.20;
+      const cy = fx.height * 0.55;
 
-        if(d.x<0||d.x>bg.width) d.vx *= -1;
-        if(d.y<0||d.y>bg.height) d.vy *= -1;
+      const RINGS = 78;
+      const ARMS = 2;
 
-        bctx.beginPath();
-        bctx.arc(d.x,d.y,d.r,0,Math.PI*2);
-        bctx.fillStyle = `rgba(0,180,255,${d.a})`;
-        bctx.fill();
-      });
+      for(let arm=0; arm<ARMS; arm++){
+        for(let i=0;i<RINGS;i++){
+          const p = i/(RINGS-1);
+          const ang = time*2.1 + p*11.0 + arm*Math.PI;
+          const rad = p * Math.min(fx.width, fx.height) * 0.58;
 
-      requestAnimationFrame(bgDraw);
+          const x = cx + Math.cos(ang)*rad;
+          const y = cy + Math.sin(ang)*rad*0.65;
+
+          const rr = 1.2 + (1-p)*2.6;
+          const a = 0.70*(1-p);
+
+          ctx.beginPath();
+          ctx.arc(x,y,rr,0,Math.PI*2);
+          ctx.fillStyle = `rgba(120,210,255,${a})`;
+          ctx.fill();
+        }
+      }
+
+      // Mayda suzuvchi zarralar (background dots)
+      for(let i=0;i<70;i++){
+        const px = (i*97 + time*60) % (fx.width + 120) - 60;
+        const py = (i*53 + Math.sin(time + i)*18) % (fx.height + 60) - 30;
+        ctx.beginPath();
+        ctx.arc(px, py, 1.1, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(255,255,255,0.22)";
+        ctx.fill();
+      }
+
+      // Portlash zarralari
+      for(let i=sparks.length-1;i>=0;i--){
+        const s = sparks[i];
+        s.x += s.vx; s.y += s.vy;
+        s.vx *= 0.985; s.vy *= 0.985;
+        s.life -= 0.022;
+
+        const al = Math.max(0, s.life);
+
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${al})`;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r*2.4,0,Math.PI*2);
+        ctx.fillStyle = `rgba(60,190,255,${al*0.35})`;
+        ctx.fill();
+
+        if(s.life<=0) sparks.splice(i,1);
+      }
+
+      requestAnimationFrame(draw);
     }
-    bgDraw();
-
-    /* ===== HERO INSIDE CANVAS (round particles over header) ===== */
-    const hc = document.getElementById('heroCanvas');
-    const hctx = hc.getContext('2d');
-
-    function heroResize(){
-      const r = heroTap.getBoundingClientRect();
-      hc.width = Math.max(1, Math.floor(r.width));
-      hc.height = Math.max(1, Math.floor(r.height));
-    }
-    heroResize();
-    window.addEventListener('resize', heroResize);
-
-    const heroDots = Array.from({length: 26}, ()=>({
-      x: Math.random()*hc.width,
-      y: Math.random()*hc.height,
-      r: Math.random()*2+0.8,
-      vx: (Math.random()-.5)*0.25,
-      vy: (Math.random()-.5)*0.25
-    }));
-
-    let ht=0;
-    function heroDraw(){
-      ht += 0.02;
-      hctx.clearRect(0,0,hc.width,hc.height);
-
-      heroDots.forEach(d=>{
-        d.x += d.vx;
-        d.y += d.vy + Math.sin(ht)*0.05;
-
-        if(d.x<0||d.x>hc.width) d.vx *= -1;
-        if(d.y<0||d.y>hc.height) d.vy *= -1;
-
-        hctx.beginPath();
-        hctx.arc(d.x,d.y,d.r,0,Math.PI*2);
-        hctx.fillStyle = 'rgba(255,255,255,0.22)';
-        hctx.fill();
-      });
-
-      requestAnimationFrame(heroDraw);
-    }
-    heroDraw();
-
-    // keep hero canvas size correct when card floats
-    setInterval(heroResize, 900);
+    draw();
   </script>
+
 </body>
 </html>
+EOF
