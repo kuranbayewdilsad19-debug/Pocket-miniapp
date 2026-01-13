@@ -1,440 +1,164 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Pocket Option Signal</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pocket Option Signal</title>
 
-  <style>
-    :root{
-      --bg1:#05070b;
-      --bg2:#07121f;
-      --glass: rgba(18, 20, 28, .62);
-      --glass2: rgba(255,255,255,.08);
-      --stroke: rgba(255,255,255,.10);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.65);
-      --shadow: 0 18px 60px rgba(0,0,0,.55);
-      --radius: 26px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      min-height:100vh;
-      background: radial-gradient(1000px 700px at 30% 15%, #0c2a46 0%, transparent 60%),
-                  radial-gradient(900px 700px at 70% 40%, #0a1a2e 0%, transparent 60%),
-                  linear-gradient(180deg, var(--bg2), var(--bg1));
-      overflow-x:hidden;
-    }
+<style>
+:root{
+  --bg:#0b0f16;
+  --card:#121826;
+  --soft:rgba(255,255,255,.08);
+  --text:#e9ecf1;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto}
+#topHero{
+  position:fixed; inset:0 0 auto 0;
+  height:380px;
+  z-index:0;
+  pointer-events:none;
+}
+#topBg3D{width:100%;height:100%;display:block}
 
-    /* ====== TOP ANIMATION AREA ====== */
-    #topHero{
-      position: fixed;
-      inset: 0 0 auto 0;
-      height: 260px;
-      z-index: 0;
-      pointer-events: none;
-      overflow:hidden;
-    }
-    #topCanvas{
-      width: 100%;
-      height: 100%;
-      display:block;
-      opacity: .95;
-    }
-    /* soft fade under hero */
-    #topFade{
-      position:absolute; left:0; right:0; bottom:-1px; height:120px;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(5,7,11,.85) 75%, rgba(5,7,11,1) 100%);
-    }
+.wrap{
+  position:relative; z-index:2;
+  min-height:100vh;
+  padding-top:300px;
+  display:flex; justify-content:center;
+}
+.card{
+  width:min(92%,420px);
+  background:linear-gradient(180deg,rgba(18,24,38,.9),rgba(18,24,38,.75));
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.header{
+  display:flex; gap:14px; align-items:center;
+  padding:14px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#2b7cff,#59c6ff);
+  box-shadow:0 18px 40px rgba(0,120,255,.35);
+}
+.ball{
+  width:42px;height:42px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#fff,#9bd7ff,#2b7cff);
+  box-shadow:0 0 25px rgba(120,200,255,.8);
+}
+.header h1{margin:0;font-size:18px}
+.header p{margin:2px 0 0;font-size:12px;opacity:.9}
 
-    /* ====== CONTENT WRAP ====== */
-    .wrap{
-      position:relative;
-      z-index: 2;
-      padding: 18px 16px 28px;
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    /* card */
-    .card{
-      margin-top: 110px;
-      background: var(--glass);
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      padding: 16px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    /* header inside card */
-    .heroBar{
-      display:flex;
-      gap:14px;
-      align-items:center;
-      padding: 14px 14px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(0,160,255,.24), rgba(0,0,0,.10));
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      margin-bottom: 14px;
-    }
-    .logoOrb{
-      width:42px; height:42px; border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), rgba(0,140,255,.15) 35%, rgba(0,0,0,.0) 70%),
-                  radial-gradient(circle at 70% 70%, rgba(0,200,255,.20), rgba(0,0,0,0) 60%),
-                  rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: 0 12px 26px rgba(0,0,0,.35);
-      flex: 0 0 auto;
-    }
-    .heroTxt .t{
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: .2px;
-      line-height: 1.1;
-    }
-    .heroTxt .s{
-      margin-top: 4px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    /* menu buttons */
-    .menu{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
-    }
-    .btn{
-      background: rgba(0,0,0,.38);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 18px;
-      padding: 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .btn:hover{ background: rgba(0,0,0,.46); border-color: rgba(0,190,255,.20); }
-    .btn:active{ transform: scale(.99) translateY(1px); }
-    .btn b{ display:block; font-size: 15px; }
-    .btn span{ display:block; margin-top: 6px; font-size: 12px; color: rgba(255,255,255,.70); }
-    .btn.big{ grid-column: 1 / -1; }
-
-    /* pages */
-    .page{ display:none; }
-    .page.active{ display:block; }
-    .back{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      margin: 8px 0 12px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(0,0,0,.34);
-      border: 1px solid rgba(255,255,255,.10);
-      cursor:pointer;
-      width: fit-content;
-      color: rgba(255,255,255,.88);
-    }
-    .back:active{ transform: scale(.99); }
-
-    @media (max-width:420px){
-      #topHero{ height: 240px; }
-      .card{ margin-top: 100px; }
-      .heroTxt .t{ font-size: 20px; }
-    }
-  </style>
+.menu{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.btn{
+  background:var(--soft);
+  border-radius:16px;
+  padding:14px;
+  cursor:pointer;
+  transition:.15s;
+}
+.btn:hover{background:rgba(255,255,255,.14)}
+.btn b{display:block;font-size:15px}
+.btn span{font-size:12px;opacity:.75}
+.full{grid-column:1/-1}
+</style>
 </head>
 
 <body>
-  <!-- TOP ANIM (only top area) -->
-  <div id="topHero">
-    <canvas id="topCanvas"></canvas>
-    <div id="topFade"></div>
-  </div>
 
-  <div class="wrap">
-    <div class="card">
+<!-- ===== YUQORI 3D ANIMATSIYA ===== -->
+<div id="topHero">
+  <canvas id="topBg3D"></canvas>
+</div>
 
-      <!-- MENU PAGE -->
-      <div class="page active" id="menu">
-        <div class="heroBar">
-          <div class="logoOrb"></div>
-          <div class="heroTxt">
-            <div class="t">Pocket Option Signal</div>
-            <div class="s">Barmoq tegsa — rang almashadi. Professional qora menu.</div>
-          </div>
-        </div>
-
-        <div class="menu">
-          <div class="btn" onclick="openPage('signal')">
-            <b>📈 Pocket Signal</b><span>Signal sahifasi</span>
-          </div>
-          <div class="btn" onclick="openPage('chat')">
-            <b>💬 Pocket Chat</b><span>Ilova ichida chat</span>
-          </div>
-          <div class="btn" onclick="openPage('settings')">
-            <b>⚙️ Setting</b><span>Sozlamalar</span>
-          </div>
-          <div class="btn" onclick="openPage('vip')">
-            <b>👑 VIP Signal</b><span>Referral uchun</span>
-          </div>
-          <div class="btn" onclick="openPage('ai')">
-            <b>🤖 AI Analiz</b><span>Keyin ulanadi</span>
-          </div>
-          <div class="btn" onclick="openPage('edu')">
-            <b>📚 Darslik &amp; Stat</b><span>Grafik/darslar</span>
-          </div>
-          <div class="btn big" onclick="openPage('info')">
-            <b>ℹ️ Info</b><span>Qisqa ma’lumot</span>
-          </div>
-        </div>
+<!-- ===== MENU (O‘ZGARMAGAN) ===== -->
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="ball"></div>
+      <div>
+        <h1>Pocket Option Signal</h1>
+        <p>Barmoq tegsa — rang almashadi. Professional qora menu.</p>
       </div>
+    </div>
 
-      <!-- OTHER PAGES (example placeholders) -->
-      <div class="page" id="signal">
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-        <b>Signal sahifasi</b>
-        <div style="margin-top:10px;color:rgba(255,255,255,.75);font-size:13px">
-          Bu yerga signal UI qo‘shamiz.
-        </div>
-      </div>
-
-      <div class="page" id="chat">
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-        <b>Chat</b>
-      </div>
-
-      <div class="page" id="settings">
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-        <b>Sozlamalar</b>
-      </div>
-
-      <div class="page" id="vip">
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-        <b>VIP</b>
-      </div>
-
-      <div class="page" id="ai">
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-        <b>AI Analiz</b>
-      </div>
-
-      <div class="page" id="edu">
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-        <b>Darslik &amp; Stat</b>
-      </div>
-
-      <div class="page" id="info">
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-        <b>Info</b>
-        <div style="margin-top:10px;color:rgba(255,255,255,.75);font-size:13px">
-          Bu miniapp — Pocket uchun signal / chat / darslik bo‘limlari.
-        </div>
-      </div>
-
+    <div class="menu">
+      <div class="btn"><b>📈 Pocket Signal</b><span>Signal sahifasi</span></div>
+      <div class="btn"><b>💬 Pocket Chat</b><span>Ilova ichida chat</span></div>
+      <div class="btn"><b>⚙️ Setting</b><span>Sozlamalar</span></div>
+      <div class="btn"><b>👑 VIP Signal</b><span>Referral uchun</span></div>
+      <div class="btn"><b>🤖 AI Analiz</b><span>Keyin ulanadi</span></div>
+      <div class="btn"><b>📚 Darslik & Stat</b><span>Grafik/darslar</span></div>
+      <div class="btn full"><b>ℹ️ Info</b><span>Qisqa ma’lumot</span></div>
     </div>
   </div>
+</div>
 
-  <script>
-    /* ====== PAGE SWITCH ====== */
-    function openPage(id){
-      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-      const el = document.getElementById(id);
-      if(el) el.classList.add('active');
-    }
+<script>
+const canvas=document.getElementById('topBg3D');
+const ctx=canvas.getContext('2d');
+function resize(){
+  canvas.width=innerWidth;
+  canvas.height=document.getElementById('topHero').offsetHeight;
+}
+resize(); addEventListener('resize',resize);
 
-    /* ====== TOP CANVAS PARTICLE ORB (touch changes colors) ====== */
-    const canvas = document.getElementById('topCanvas');
-    const ctx = canvas.getContext('2d');
+let hue=200, targetHue=200;
+addEventListener('pointerdown',()=>{targetHue=Math.random()*360});
 
-    function resize(){
-      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-      canvas.width  = Math.floor(canvas.clientWidth  * dpr);
-      canvas.height = Math.floor(canvas.clientHeight * dpr);
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-    }
-    // set initial size after layout
-    requestAnimationFrame(()=>{ resize(); });
-    window.addEventListener('resize', resize);
+const DOTS=1200;
+const dots=[...Array(DOTS)].map(()=>({
+  a:Math.random()*Math.PI*2,
+  r:Math.random(),
+  s:Math.random()*0.6+0.2
+}));
 
-    // palette cycle
-    const palette = [
-      {name:'blue',   a:[0,170,255], b:[0,255,210]},
-      {name:'red',    a:[255,70,70], b:[255,170,70]},
-      {name:'black',  a:[40,40,40],  b:[120,120,120]},
-      {name:'white',  a:[240,240,240], b:[180,220,255]},
-      {name:'pink',   a:[255,80,190], b:[120,200,255]},
-      {name:'brown',  a:[160,110,70], b:[240,210,160]},
-      {name:'yellow', a:[255,220,80], b:[255,120,40]},
-      {name:'green',  a:[60,255,140], b:[0,190,255]},
-    ];
-    let palIndex = 0;
-    let palT = 0; // smooth transition 0..1
-    let targetIndex = 0;
+let t=0;
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  t+=0.01;
+  hue+=(targetHue-hue)*0.05;
 
-    function nextColor(){
-      palIndex = targetIndex;
-      targetIndex = (targetIndex + 1) % palette.length;
-      palT = 0;
-    }
+  const cx=canvas.width/2;
+  const cy=canvas.height*0.55;
+  const R=Math.min(canvas.width,canvas.height)*0.38;
 
-    // touch / click changes palette
-    function onTouch(){
-      nextColor();
-    }
-    window.addEventListener('pointerdown', onTouch, {passive:true});
+  ctx.globalCompositeOperation="lighter";
+  dots.forEach(d=>{
+    const ang=d.a+t*0.8;
+    const rr=R*(0.2+d.r*0.9);
+    const x=cx+Math.cos(ang)*rr;
+    const y=cy+Math.sin(ang)*rr*0.55;
+    ctx.fillStyle=`hsla(${hue+d.r*60},100%,60%,.7)`;
+    ctx.beginPath();
+    ctx.arc(x,y,d.s*2,0,Math.PI*2);
+    ctx.fill();
+  });
 
-    function lerp(a,b,t){ return a + (b-a)*t; }
-    function rgb(c){ return `rgb(${c[0]|0},${c[1]|0},${c[2]|0})`; }
-    function mixRGB(A,B,t){
-      return [
-        lerp(A[0],B[0],t),
-        lerp(A[1],B[1],t),
-        lerp(A[2],B[2],t)
-      ];
-    }
+  // spiral ring
+  ctx.strokeStyle=`hsla(${hue},100%,60%,.6)`;
+  ctx.lineWidth=1.2;
+  ctx.beginPath();
+  for(let i=0;i<260;i++){
+    const p=i/260;
+    const a=t*1.2+p*10;
+    const rr=R*(0.2+p);
+    const x=cx+Math.cos(a)*rr;
+    const y=cy+Math.sin(a)*rr*0.55;
+    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+  }
+  ctx.stroke();
 
-    // particles for orb
-    const dots = [];
-    const DOTS = 560;
-    function initDots(){
-      dots.length = 0;
-      for(let i=0;i<DOTS;i++){
-        // sphere distribution
-        const u = Math.random();
-        const v = Math.random();
-        const theta = 2*Math.PI*u;
-        const phi = Math.acos(2*v - 1);
-        const r = 1.0 + (Math.random()-0.5)*0.03;
-        dots.push({
-          theta, phi, r,
-          size: 0.8 + Math.random()*1.8,
-          seed: Math.random()*10
-        });
-      }
-    }
-    initDots();
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
 
-    let t = 0;
-    function draw(){
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      ctx.clearRect(0,0,w,h);
-
-      // smooth palette transition
-      palT = Math.min(1, palT + 0.02);
-      const A0 = palette[palIndex].a;
-      const B0 = palette[palIndex].b;
-      const A1 = palette[targetIndex].a;
-      const B1 = palette[targetIndex].b;
-
-      const ca = mixRGB(A0, A1, palT);
-      const cb = mixRGB(B0, B1, palT);
-
-      // background glow
-      const g = ctx.createRadialGradient(w*0.5, h*0.35, 10, w*0.5, h*0.35, Math.max(w,h)*0.65);
-      g.addColorStop(0, `rgba(${ca[0]|0},${ca[1]|0},${ca[2]|0},0.18)`);
-      g.addColorStop(1, `rgba(0,0,0,0)`);
-      ctx.fillStyle = g;
-      ctx.fillRect(0,0,w,h);
-
-      const cx = w*0.5;
-      const cy = h*0.55;
-      const R = Math.min(w,h)*0.22;
-
-      // fake 3D rotation controlled by pointer position
-      const px = (lastX - cx) / (w*0.5);
-      const py = (lastY - cy) / (h*0.7);
-
-      const rotY = px * 0.9;
-      const rotX = py * 0.6;
-
-      function project(x,y,z){
-        // rotate x
-        let y1 = y*Math.cos(rotX) - z*Math.sin(rotX);
-        let z1 = y*Math.sin(rotX) + z*Math.cos(rotX);
-        // rotate y
-        let x2 = x*Math.cos(rotY) + z1*Math.sin(rotY);
-        let z2 = -x*Math.sin(rotY) + z1*Math.cos(rotY);
-
-        const depth = 2.2;
-        const s = depth / (depth + z2);
-        return {x: cx + x2*s, y: cy + y1*s, s, z:z2};
-      }
-
-      // orbit ring
-      ctx.save();
-      ctx.globalAlpha = 0.65;
-      ctx.lineWidth = 1.3;
-      const ring = ctx.createLinearGradient(cx-R*1.5, cy, cx+R*1.5, cy);
-      ring.addColorStop(0, `rgba(${ca[0]|0},${ca[1]|0},${ca[2]|0},0.0)`);
-      ring.addColorStop(0.45, `rgba(${cb[0]|0},${cb[1]|0},${cb[2]|0},0.55)`);
-      ring.addColorStop(1, `rgba(${ca[0]|0},${ca[1]|0},${ca[2]|0},0.0)`);
-      ctx.strokeStyle = ring;
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, R*1.55, R*0.78, t*0.25, 0, Math.PI*2);
-      ctx.stroke();
-      ctx.restore();
-
-      // draw sphere dots (sort by depth)
-      const pts = [];
-      for(const d of dots){
-        const wob = Math.sin(t*0.9 + d.seed)*0.02;
-        const rr = d.r + wob;
-
-        const x = rr * Math.sin(d.phi) * Math.cos(d.theta);
-        const y = rr * Math.cos(d.phi);
-        const z = rr * Math.sin(d.phi) * Math.sin(d.theta);
-
-        const p = project(x*R, y*R, z*R);
-        pts.push({...p, size: d.size});
-      }
-      pts.sort((a,b)=>a.z-b.z);
-
-      for(const p of pts){
-        const alpha = 0.10 + (p.s*0.35);
-        const col = mixRGB(ca, cb, (p.z/(R))+0.5);
-        ctx.fillStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${alpha})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size*p.s, 0, Math.PI*2);
-        ctx.fill();
-      }
-
-      // core glow
-      const core = ctx.createRadialGradient(cx, cy, 5, cx, cy, R*1.15);
-      core.addColorStop(0, `rgba(${cb[0]|0},${cb[1]|0},${cb[2]|0},0.18)`);
-      core.addColorStop(1, `rgba(0,0,0,0)`);
-      ctx.fillStyle = core;
-      ctx.fillRect(0,0,w,h);
-
-      // time
-      t += 0.016;
-      requestAnimationFrame(draw);
-    }
-
-    // pointer tracking for 3D feel
-    let lastX = 0, lastY = 0;
-    function updatePointer(e){
-      lastX = e.clientX;
-      lastY = e.clientY;
-    }
-    window.addEventListener('pointermove', updatePointer, {passive:true});
-    // default center
-    requestAnimationFrame(()=>{
-      lastX = window.innerWidth/2;
-      lastY = 140;
-    });
-
-    draw();
-  </script>
 </body>
 </html>
