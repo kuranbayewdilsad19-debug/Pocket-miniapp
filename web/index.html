@@ -1,596 +1,536 @@
 <!doctype html>
 <html lang="uz">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Pocket Option Signal</title>
   <style>
     :root{
-      --bg1:#061a2b;
-      --bg2:#050b14;
-      --card:rgba(18,24,36,.62);
-      --stroke:rgba(255,255,255,.10);
-      --txt:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.68);
-      --btn:rgba(255,255,255,.06);
-      --btn2:rgba(255,255,255,.10);
-      --shadow: 0 18px 55px rgba(0,0,0,.45);
+      --bg1:#041118;
+      --bg2:#071823;
+      --card: rgba(10,14,18,.78);
+      --card2: rgba(10,14,18,.62);
+      --stroke: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --muted2: rgba(255,255,255,.58);
+      --btn: rgba(255,255,255,.07);
+      --btn2: rgba(255,255,255,.10);
+      --shadow: 0 30px 90px rgba(0,0,0,.55);
+      --r: 26px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%; margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#000; color:var(--txt);}
 
-    /* ===== TOP 3D AREA (ONLY TOP) ===== */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(0,180,255,.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 30%, rgba(120,0,255,.10), transparent 62%),
+        linear-gradient(180deg, var(--bg2), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    /* ===== TOP 3D CANVAS AREA (ONLY TOP) ===== */
     #topHero3D{
-      position: fixed;
-      left:0; right:0; top:0;
-      height: 42vh;              /* only TOP area */
-      z-index: 0;
-      pointer-events: auto;      /* canvas can receive touch */
-      overflow:hidden;
-      background: radial-gradient(circle at 30% 15%, rgba(0,180,255,.25), transparent 55%),
-                  radial-gradient(circle at 70% 35%, rgba(0,255,190,.12), transparent 55%),
-                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      position:fixed;
+      left:0; top:0;
+      width:100%;
+      height:56vh;         /* top area */
+      pointer-events:none; /* do not block clicks */
+      z-index:0;
+      overflow:visible;
+      background:
+        radial-gradient(700px 300px at 50% 15%, rgba(0,180,255,.18), transparent 60%),
+        linear-gradient(180deg, rgba(6,30,48,1), rgba(2,8,12,0));
     }
     #topBg3D{
       width:100%;
       height:100%;
       display:block;
-      opacity: 1;
+      opacity:1;
     }
 
-    /* ===== APP WRAP ABOVE CANVAS ===== */
+    /* ===== PAGE LAYOUT ===== */
     .wrap{
-      position: relative;
-      z-index: 2;               /* IMPORTANT: menu above canvas */
-      min-height: 100%;
-      padding: 18px 14px 24px;
+      position:relative;
+      z-index:2;
+      min-height:100vh;
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:center;
+      padding: 18vh 14px 26px; /* pushes menu down so top 3D is visible */
     }
 
-    /* ===== GLASS CARD ===== */
     .card{
-      width: min(520px, 100%);
-      margin-top: 18vh;         /* card starts under top 3D area */
-      padding: 16px 16px 18px;
-      border-radius: 26px;
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid var(--stroke);
+      width:min(520px, 94vw);
+      border-radius: var(--r);
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border:1px solid var(--stroke);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       transform-style: preserve-3d;
-      transition: transform .12s ease;
+      transition: transform .14s ease;
+      position:relative;
       overflow:hidden;
     }
     .card::before{
       content:"";
-      position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 20%, rgba(0,180,255,.22), transparent 45%);
-      transform: translateZ(8px);
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(500px 220px at 20% 0%, rgba(0,180,255,.16), transparent 55%),
+        radial-gradient(500px 240px at 85% 20%, rgba(140,0,255,.12), transparent 58%);
       pointer-events:none;
+      transform: translateZ(0);
     }
 
     .header{
+      position:relative;
+      padding: 18px 18px 12px;
       display:flex;
       gap:14px;
       align-items:center;
-      padding: 14px 14px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(0,120,255,.50), rgba(0,210,255,.35));
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: 0 10px 22px rgba(0,0,0,.25);
-      position:relative;
-      overflow:hidden;
+      border-bottom: 1px solid rgba(255,255,255,.07);
     }
-    .header::after{
-      content:"";
-      position:absolute; inset:-60%;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 55%);
+    .orbIcon{
+      width:54px;height:54px;border-radius:16px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.25), rgba(255,255,255,.08) 55%, rgba(0,0,0,.25));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;
       transform: translateZ(10px);
-      pointer-events:none;
     }
-    .logo{
-      width:54px; height:54px; border-radius: 18px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.16);
-      display:flex; align-items:center; justify-content:center;
-      box-shadow: inset 0 0 25px rgba(255,255,255,.08);
-      font-size: 26px;
-      flex: 0 0 auto;
-    }
-    .title{
-      line-height: 1.05;
-    }
-    .title h1{
-      margin:0;
-      font-size: 26px;
+    .hTitle{
+      font-size:22px;
+      font-weight:800;
       letter-spacing:.2px;
+      line-height:1.1;
+      margin:0;
     }
-    .title p{
-      margin:6px 0 0;
-      font-size: 14px;
-      color: rgba(255,255,255,.80);
+    .hSub{
+      margin:3px 0 0;
+      font-size:14px;
+      color:var(--muted);
     }
     .hint{
-      margin:10px 2px 2px;
-      font-size: 12.5px;
-      color: rgba(255,255,255,.75);
-      opacity:.95;
+      margin:10px 18px 0;
+      color:var(--muted2);
+      font-size:13px;
+      line-height:1.35;
     }
 
-    /* ===== MENU GRID ===== */
     .menu{
-      margin-top: 14px;
+      padding:16px 16px 18px;
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap:12px;
     }
+
     .btn{
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.10);
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.10);
       border-radius: 18px;
       padding: 14px 14px;
       cursor:pointer;
-      user-select:none;
-      box-shadow: 0 10px 26px rgba(0,0,0,.25);
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
       position:relative;
       overflow:hidden;
-      pointer-events: auto; /* make sure clickable */
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      transform: translateZ(0);
     }
     .btn::before{
       content:"";
-      position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.12), transparent 55%);
-      transform: translateZ(6px);
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at 30% 20%, rgba(0,180,255,.16), transparent 50%);
+      transform: translateZ(0);
       pointer-events:none;
     }
     .btn:hover{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.14); }
     .btn:active{ transform: translateY(2px) scale(.99); }
+
     .btn b{
       display:block;
-      font-size: 16px;
-      margin-bottom: 6px;
+      font-size:15px;
+      font-weight:800;
+      letter-spacing:.2px;
+      margin-bottom:4px;
     }
     .btn span{
       display:block;
-      font-size: 12.5px;
-      color: rgba(255,255,255,.72);
+      font-size:12.5px;
+      color:var(--muted);
+      opacity:.95;
     }
-    .big{ grid-column: 1 / -1; }
 
-    /* ===== PAGES ===== */
-    .page{display:none}
-    .page.active{display:block}
+    .btn.big{ grid-column:1 / -1; }
 
-    .pageBox{
-      margin-top: 14px;
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.10);
+    /* pages */
+    .page{ display:none; }
+    .page.active{ display:block; }
+
+    .pageInner{
+      padding:16px 16px 18px;
     }
+
     .back{
-      display:inline-block;
-      margin-top: 12px;
-      opacity: .85;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin: 10px 16px 0;
       cursor:pointer;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.82);
+      opacity:.9;
+      user-select:none;
     }
-    .back:hover{opacity:1}
+    .back:active{ opacity:1; transform: translateY(1px); }
 
-    /* small safe area */
-    .safe{height: env(safe-area-inset-bottom, 0px);}
+    .box{
+      margin: 10px 16px 16px;
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.09);
+      color: rgba(255,255,255,.86);
+      line-height:1.4;
+    }
   </style>
 </head>
-
 <body>
 
-  <!-- TOP AREA ONLY -->
-  <div id="topHero3D">
-    <canvas id="topBg3D"></canvas>
-  </div>
+  <!-- TOP ONLY 3D -->
+  <div id="topHero3D"><canvas id="topBg3D"></canvas></div>
 
-  <!-- APP CONTENT -->
   <div class="wrap" id="wrap">
     <div class="card" id="card">
 
-      <!-- MENU PAGE -->
+      <!-- MENU -->
       <div class="page active" id="menu">
         <div class="header">
-          <div class="logo">🟦</div>
-          <div class="title">
-            <h1>Pocket Option Signal</h1>
-            <p>Menu’dan bo‘lim tanlang</p>
+          <div class="orbIcon" id="orbIcon">🔷</div>
+          <div>
+            <h1 class="hTitle" id="titleText">Pocket Option Signal</h1>
+            <p class="hSub" id="subText">Menu’dan bo‘lim tanlang</p>
           </div>
         </div>
-        <div class="hint">Barmoq bilan aylantiring — ranglar almashadi. Tugmalar ishlaydi.</div>
+        <div class="hint" id="hintText">Barmoq bilan aylantir — ranglar almashadi. Tugmalar ishlaydi.</div>
 
         <div class="menu">
-          <div class="btn" onclick="openPage('signal')">
-            <b>📈 Pocket Signal</b><span>Signal sahifasi</span>
-          </div>
-          <div class="btn" onclick="openPage('chat')">
-            <b>💬 Pocket Chat</b><span>Ilova ichida chat</span>
-          </div>
-          <div class="btn" onclick="openPage('settings')">
-            <b>⚙️ Setting</b><span>Sozlamalar</span>
-          </div>
-          <div class="btn" onclick="openPage('vip')">
-            <b>👑 VIP Signal</b><span>Referral uchun</span>
-          </div>
-          <div class="btn" onclick="openPage('ai')">
-            <b>🤖 AI Analiz</b><span>Keyin ulanadi</span>
-          </div>
-          <div class="btn" onclick="openPage('edu')">
-            <b>📚 Darslik & Stat</b><span>Grafik/darslar</span>
-          </div>
-          <div class="btn big" onclick="openPage('info')">
-            <b>ℹ️ Info</b><span>Qisqa ma’lumot</span>
-          </div>
+          <div class="btn" onclick="openPage('signal')"><b>📈 Pocket Signal</b><span>Signal sahifasi</span></div>
+          <div class="btn" onclick="openPage('chat')"><b>💬 Pocket Chat</b><span>Ilova ichida chat</span></div>
+          <div class="btn" onclick="openPage('settings')"><b>⚙️ Setting</b><span>Sozlamalar</span></div>
+          <div class="btn" onclick="openPage('vip')"><b>👑 VIP Signal</b><span>Referral uchun</span></div>
+          <div class="btn" onclick="openPage('ai')"><b>🤖 AI Analiz</b><span>Keyin ulanadi</span></div>
+          <div class="btn" onclick="openPage('edu')"><b>📚 Darslik & Stat</b><span>Grafik/darslar</span></div>
+          <div class="btn big" onclick="openPage('info')"><b>ℹ️ Info</b><span>Qisqa ma’lumot</span></div>
         </div>
       </div>
 
-      <!-- OTHER PAGES (simple placeholders; you can replace later) -->
+      <!-- PAGES -->
       <div class="page" id="signal">
-        <div class="pageBox">
-          <b>📈 Signal sahifasi</b>
-          <div style="margin-top:8px; color:var(--muted); font-size:13px">
-            Bu yerga signal UI’ni keyin qo‘yamiz.
-          </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+        <div class="pageInner">
+          <div class="box"><b>Pocket Signal</b><br/>Bu yerda signal kontenti bo‘ladi.</div>
         </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Ortga</div>
       </div>
 
       <div class="page" id="chat">
-        <div class="pageBox">
-          <b>💬 Chat</b>
-          <div style="margin-top:8px; color:var(--muted); font-size:13px">
-            Mini chat / support joyi.
-          </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+        <div class="pageInner">
+          <div class="box"><b>Pocket Chat</b><br/>Bu yerda chat bo‘limi bo‘ladi.</div>
         </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Ortga</div>
       </div>
 
       <div class="page" id="settings">
-        <div class="pageBox">
-          <b>⚙️ Sozlamalar</b>
-          <div style="margin-top:8px; color:var(--muted); font-size:13px">
-            Dark mode / til / profil.
-          </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+        <div class="pageInner">
+          <div class="box"><b>Setting</b><br/>Sozlamalar shu yerda.</div>
         </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Ortga</div>
       </div>
 
       <div class="page" id="vip">
-        <div class="pageBox">
-          <b>👑 VIP</b>
-          <div style="margin-top:8px; color:var(--muted); font-size:13px">
-            Referral/VIP obuna.
-          </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+        <div class="pageInner">
+          <div class="box"><b>VIP Signal</b><br/>VIP funksiyalar keyin qo‘shiladi.</div>
         </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Ortga</div>
       </div>
 
       <div class="page" id="ai">
-        <div class="pageBox">
-          <b>🤖 AI Analiz</b>
-          <div style="margin-top:8px; color:var(--muted); font-size:13px">
-            Keyin ulanadi.
-          </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+        <div class="pageInner">
+          <div class="box"><b>AI Analiz</b><br/>Keyin ulanadi.</div>
         </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Ortga</div>
       </div>
 
       <div class="page" id="edu">
-        <div class="pageBox">
-          <b>📚 Darslik & Stat</b>
-          <div style="margin-top:8px; color:var(--muted); font-size:13px">
-            Grafiklar va darslar.
-          </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+        <div class="pageInner">
+          <div class="box"><b>Darslik & Stat</b><br/>Grafik/darslar bo‘limi.</div>
         </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Ortga</div>
       </div>
 
       <div class="page" id="info">
-        <div class="pageBox">
-          <b>ℹ️ Info</b>
-          <div style="margin-top:8px; color:var(--muted); font-size:13px">
-            Qisqa ma’lumot.
-          </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+        <div class="pageInner">
+          <div class="box"><b>Info</b><br/>Qisqa ma’lumot.</div>
         </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Ortga</div>
       </div>
 
-      <div class="safe"></div>
     </div>
   </div>
 
-<script>
-  // ===== PAGE SWITCH =====
-  function openPage(id){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    const el = document.getElementById(id);
-    if(el) el.classList.add('active');
-  }
+  <script>
+    // ===== PAGE SWITCH (buttons must work) =====
+    function openPage(id){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      const el = document.getElementById(id);
+      if(el) el.classList.add('active');
+      // reset tilt when changing page
+      resetTilt();
+    }
 
-  // ===== CARD 3D TILT (touch + mouse) =====
-  const wrap = document.getElementById('wrap');
-  const card = document.getElementById('card');
+    // ===== 3D TILT for card (mouse + touch) =====
+    const wrap = document.getElementById('wrap');
+    const card = document.getElementById('card');
 
-  function applyTilt(dx, dy){
-    const max = 10;
-    card.style.transform =
-      `rotateX(${(-dy*max).toFixed(2)}deg) rotateY(${(dx*max).toFixed(2)}deg) translateZ(0)`;
-  }
-  function resetTilt(){
-    card.style.transform = 'rotateX(0deg) rotateY(0deg)';
-  }
+    function applyTilt(dx, dy){
+      const max = 10; // kuchi
+      card.style.transform =
+        `rotateX(${(-dy*max).toFixed(2)}deg) rotateY(${(dx*max).toFixed(2)}deg) translateZ(0)`;
+    }
+    function resetTilt(){
+      card.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0)';
+    }
 
-  wrap.addEventListener('mousemove', (e)=>{
-    const r = card.getBoundingClientRect();
-    const cx = r.left + r.width/2;
-    const cy = r.top + r.height/2;
-    const dx = (e.clientX - cx) / (r.width/2);
-    const dy = (e.clientY - cy) / (r.height/2);
-    applyTilt(dx, dy);
-  });
-  wrap.addEventListener('mouseleave', resetTilt);
-
-  wrap.addEventListener('touchmove', (e)=>{
-    const t = e.touches[0];
-    const r = card.getBoundingClientRect();
-    const cx = r.left + r.width/2;
-    const cy = r.top + r.height/2;
-    const dx = (t.clientX - cx) / (r.width/2);
-    const dy = (t.clientY - cy) / (r.height/2);
-    applyTilt(dx, dy);
-  }, {passive:true});
-  wrap.addEventListener('touchend', resetTilt);
-
-
-  // ============================================================
-  // TOP CANVAS: REAL LOOKING 3D PARTICLE SPHERE (NO LIBS)
-  // - rotates by itself
-  // - drag to rotate
-  // - touch/click changes color (blue, red, black, white, pink, brown, yellow, green)
-  // ============================================================
-  const canvas = document.getElementById('topBg3D');
-  const ctx = canvas.getContext('2d');
-
-  const palette = [
-    {h: 200, s: 95, l: 70}, // blue
-    {h: 0,   s: 95, l: 68}, // red
-    {h: 0,   s: 0,  l: 12}, // black
-    {h: 0,   s: 0,  l: 92}, // white
-    {h: 320, s: 90, l: 72}, // pink
-    {h: 28,  s: 55, l: 45}, // brown
-    {h: 52,  s: 95, l: 65}, // yellow
-    {h: 125, s: 80, l: 60}, // green
-  ];
-  let pIndex = 0;
-  let cur = {...palette[0]};
-  let tgt = {...palette[0]};
-
-  function nextColor(){
-    pIndex = (pIndex + 1) % palette.length;
-    tgt = {...palette[pIndex]};
-  }
-
-  function resize(){
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const rect = canvas.getBoundingClientRect();
-    canvas.width  = Math.floor(rect.width * dpr);
-    canvas.height = Math.floor(rect.height * dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-  window.addEventListener('resize', resize);
-
-  function project3D(x, y, z, cx, cy, fov){
-    const scale = fov / (fov + z);
-    return { x: cx + x*scale, y: cy + y*scale, s: scale };
-  }
-
-  // More "real" sphere: lots of particles
-  const POINTS = 1800;
-  const R = 95; // sphere radius in px
-  const pts = [];
-
-  // Fibonacci sphere distribution
-  for(let i=0;i<POINTS;i++){
-    const t = i / (POINTS - 1);
-    const phi = Math.acos(1 - 2*t);
-    const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-
-    const x = Math.cos(theta) * Math.sin(phi);
-    const y = Math.sin(theta) * Math.sin(phi);
-    const z = Math.cos(phi);
-
-    pts.push({
-      x,y,z,
-      seed: Math.random()*1000
+    // PC
+    wrap.addEventListener('mousemove', (e)=>{
+      const r = card.getBoundingClientRect();
+      const cx = r.left + r.width/2;
+      const cy = r.top + r.height/2;
+      const dx = (e.clientX - cx) / (r.width/2);
+      const dy = (e.clientY - cy) / (r.height/2);
+      applyTilt(dx, dy);
     });
-  }
+    wrap.addEventListener('mouseleave', resetTilt);
 
-  let rotX = 0.6, rotY = 0.0;
-  let velX = 0.0018, velY = 0.0026;
-  let drag = false;
-  let last = {x:0,y:0};
+    // Phone/Telegram (touch)
+    wrap.addEventListener('touchmove', (e)=>{
+      const t = e.touches[0];
+      const r = card.getBoundingClientRect();
+      const cx = r.left + r.width/2;
+      const cy = r.top + r.height/2;
+      const dx = (t.clientX - cx) / (r.width/2);
+      const dy = (t.clientY - cy) / (r.height/2);
+      applyTilt(dx, dy);
+    }, {passive:true});
+    wrap.addEventListener('touchend', resetTilt);
 
-  function canvasPoint(e){
-    const rect = canvas.getBoundingClientRect();
-    let x,y;
-    if(e.touches && e.touches[0]){
-      x = e.touches[0].clientX - rect.left;
-      y = e.touches[0].clientY - rect.top;
-    } else {
-      x = e.clientX - rect.left;
-      y = e.clientY - rect.top;
+    // ===== TOP 3D ORB (2D canvas fake-3D) =====
+    const canvas = document.getElementById('topBg3D');
+    const ctx = canvas.getContext('2d');
+
+    function size(){
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      canvas.width  = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor((window.innerHeight * 0.56) * dpr);
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = (window.innerHeight * 0.56) + 'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
     }
-    return {x,y};
-  }
+    window.addEventListener('resize', size);
+    size();
 
-  function rotatePoint(px, py, pz, ax, ay){
-    let x = px, y = py, z = pz;
+    // Color themes (touch changes)
+    const themes = [
+      {h:195, s:95, l:58}, // blue
+      {h:0,   s:95, l:58}, // red
+      {h:0,   s:0,  l:92}, // white
+      {h:0,   s:0,  l:10}, // black
+      {h:320, s:85, l:62}, // pink
+      {h:30,  s:90, l:58}, // brown/orange
+      {h:55,  s:95, l:58}, // yellow
+      {h:130, s:85, l:55}, // green
+    ];
+    let themeIndex = 0;
+    let cur = {...themes[0]};
+    let tgt = {...themes[0]};
 
-    // X
-    const cx = Math.cos(ax), sx = Math.sin(ax);
-    const y1 = y*cx - z*sx;
-    const z1 = y*sx + z*cx;
-    y = y1; z = z1;
+    // Touch anywhere top -> cycle color
+    let touching = false;
+    let lastX = 0, lastY = 0;
+    document.addEventListener('touchstart', (e)=>{
+      touching = true;
+      const t = e.touches[0];
+      lastX = t.clientX; lastY = t.clientY;
+      // if touch is in top area -> change theme
+      if(t.clientY <= window.innerHeight * 0.56){
+        themeIndex = (themeIndex + 1) % themes.length;
+        tgt = {...themes[themeIndex]};
+        // small UI text update
+        document.getElementById('hintText').textContent =
+          "Barmoq bilan aylantir — ranglar almashadi. Tugmalar ishlaydi.";
+      }
+    }, {passive:true});
+    document.addEventListener('touchmove', (e)=>{
+      const t = e.touches[0];
+      lastX = t.clientX; lastY = t.clientY;
+    }, {passive:true});
+    document.addEventListener('touchend', ()=>{touching=false;}, {passive:true});
 
-    // Y
-    const cy = Math.cos(ay), sy = Math.sin(ay);
-    const x1 = x*cy + z*sy;
-    const z2 = -x*sy + z*cy;
-    x = x1; z = z2;
+    // Mouse move also rotates
+    document.addEventListener('mousemove', (e)=>{
+      lastX = e.clientX; lastY = e.clientY;
+    });
 
-    return {x,y,z};
-  }
+    // Particles on a sphere
+    const PCOUNT = 1400;
+    const pts = new Array(PCOUNT).fill(0).map(()=> {
+      // sphere distribution
+      const u = Math.random();
+      const v = Math.random();
+      const theta = 2*Math.PI*u;
+      const phi = Math.acos(2*v-1);
+      const x = Math.sin(phi)*Math.cos(theta);
+      const y = Math.cos(phi);
+      const z = Math.sin(phi)*Math.sin(theta);
+      const s = 0.45 + Math.random()*0.75; // size factor
+      return {x,y,z,s};
+    });
 
-  // Interactions
-  canvas.addEventListener('click', ()=> nextColor());
+    let t = 0;
 
-  canvas.addEventListener('touchstart', (e)=>{
-    drag = true;
-    last = canvasPoint(e);
-    nextColor();
-  }, {passive:true});
+    function lerp(a,b,k){ return a + (b-a)*k; }
+    function ease(x){ return 1 - Math.pow(1-x,3); }
 
-  canvas.addEventListener('touchmove', (e)=>{
-    if(!drag) return;
-    const p = canvasPoint(e);
-    const dx = p.x - last.x;
-    const dy = p.y - last.y;
-    last = p;
-    rotY += dx * 0.008;
-    rotX += dy * 0.006;
-    velY = dx * 0.00008;
-    velX = dy * 0.00006;
-  }, {passive:true});
+    function draw(){
+      t += 0.012;
 
-  canvas.addEventListener('touchend', ()=> drag=false);
+      const w = window.innerWidth;
+      const h = window.innerHeight * 0.56;
+      ctx.clearRect(0,0,w,h);
 
-  canvas.addEventListener('mousedown', (e)=>{
-    drag = true;
-    last = canvasPoint(e);
-    nextColor();
-  });
-  window.addEventListener('mousemove', (e)=>{
-    if(!drag) return;
-    const p = canvasPoint(e);
-    const dx = p.x - last.x;
-    const dy = p.y - last.y;
-    last = p;
-    rotY += dx * 0.008;
-    rotX += dy * 0.006;
-    velY = dx * 0.00008;
-    velX = dy * 0.00006;
-  });
-  window.addEventListener('mouseup', ()=> drag=false);
+      // smooth theme blend
+      cur.h = lerp(cur.h, tgt.h, 0.06);
+      cur.s = lerp(cur.s, tgt.s, 0.06);
+      cur.l = lerp(cur.l, tgt.l, 0.06);
 
-  // Make background not block menu touches:
-  // (menu is above because z-index, but still safe)
-  document.getElementById('topHero3D').style.pointerEvents = 'auto';
+      // rotation based on pointer
+      const nx = (lastX / Math.max(1,w)) * 2 - 1;
+      const ny = (lastY / Math.max(1,h)) * 2 - 1;
 
-  let tt = 0;
-  function draw(){
-    const w = canvas.getBoundingClientRect().width;
-    const h = canvas.getBoundingClientRect().height;
+      const rotY = nx * 0.9 + Math.sin(t*0.6)*0.25;
+      const rotX = -ny * 0.7 + Math.cos(t*0.55)*0.20;
 
-    // Smooth color transition
-    cur.h += (tgt.h - cur.h) * 0.08;
-    cur.s += (tgt.s - cur.s) * 0.08;
-    cur.l += (tgt.l - cur.l) * 0.08;
+      // sphere parameters (TOP center)
+      const cx = w*0.50;
+      const cy = h*0.56;
+      const R  = Math.min(w, h) * 0.26;
 
-    // Background fill (top area only)
-    ctx.clearRect(0,0,w,h);
-    const bg = ctx.createRadialGradient(w*0.55, h*0.35, 10, w*0.55, h*0.60, h*1.2);
-    bg.addColorStop(0, 'rgba(10,35,55,1)');
-    bg.addColorStop(1, 'rgba(5,11,20,1)');
-    ctx.fillStyle = bg;
-    ctx.fillRect(0,0,w,h);
-
-    // Center of sphere (nice placement)
-    const cx = w * 0.52;
-    const cy = h * 0.64;
-
-    // Auto rotation with gentle inertia
-    if(!drag){
-      rotY += velY;
-      rotX += velX;
-      velY += (0.0026 - velY) * 0.01;
-      velX += (0.0018 - velX) * 0.01;
-    }
-
-    tt += 0.01;
-
-    // Soft glow around sphere (screen blend)
-    ctx.save();
-    ctx.globalCompositeOperation = 'screen';
-    const glow = ctx.createRadialGradient(cx, cy, R*0.2, cx, cy, R*1.55);
-    glow.addColorStop(0, `hsla(${cur.h}, ${cur.s}%, ${cur.l}%, .22)`);
-    glow.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(cx, cy, R*1.45, 0, Math.PI*2);
-    ctx.fill();
-    ctx.restore();
-
-    // Build projected points sorted by depth for realism
-    const projected = [];
-    for(const p of pts){
-      // small breathing wobble
-      const wobble = 1 + Math.sin(tt + p.seed) * 0.006;
-
-      const px = p.x * R * wobble;
-      const py = p.y * R * wobble;
-      const pz = p.z * R * wobble;
-
-      const rp = rotatePoint(px, py, pz, rotX, rotY);
-
-      // Perspective: push depth to look "3D"
-      const zNorm = rp.z / (R*1.25);     // -..+
-      const pr = project3D(rp.x, rp.y, zNorm*260, cx, cy, 300);
-
-      projected.push({
-        x: pr.x,
-        y: pr.y,
-        z: rp.z,
-        s: pr.s
-      });
-    }
-
-    projected.sort((a,b)=>a.z-b.z);
-
-    // Draw particles
-    for(const q of projected){
-      const depth = (q.z + R) / (2*R); // 0..1
-      const alpha = 0.07 + depth * 0.88;
-
-      // Particle size: near points bigger
-      const size = (0.50 + depth*1.55) * q.s;
-
+      // background glow
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
       ctx.beginPath();
-      ctx.arc(q.x, q.y, size, 0, Math.PI*2);
-      ctx.fillStyle = `hsla(${cur.h}, ${cur.s}%, ${cur.l}%, ${alpha})`;
+      ctx.arc(cx, cy, R*1.35, 0, Math.PI*2);
+      ctx.fillStyle = `hsla(${cur.h}, ${cur.s}%, ${cur.l}%, 0.10)`;
+      ctx.shadowColor = `hsla(${cur.h}, ${cur.s}%, ${cur.l}%, 0.35)`;
+      ctx.shadowBlur = 40;
       ctx.fill();
+      ctx.restore();
+
+      // orbit rings (TikTok-like)
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.translate(cx, cy);
+      ctx.rotate(rotY*0.55);
+
+      for(let i=0;i<2;i++){
+        ctx.save();
+        ctx.rotate((i?1:-1) * (0.95 + rotX*0.25));
+        const rr = R*(1.08 + i*0.10);
+
+        ctx.beginPath();
+        for(let a=0;a<=Math.PI*2+0.01;a+=0.04){
+          const x = Math.cos(a)*rr;
+          const y = Math.sin(a)*rr*0.35;
+          if(a===0) ctx.moveTo(x,y);
+          else ctx.lineTo(x,y);
+        }
+        ctx.strokeStyle = `hsla(${cur.h + i*40}, ${cur.s}%, ${cur.l}%, 0.35)`;
+        ctx.lineWidth = 2.1;
+        ctx.shadowColor = `hsla(${cur.h + i*40}, ${cur.s}%, ${cur.l}%, 0.60)`;
+        ctx.shadowBlur = 22;
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.restore();
+
+      // project points
+      const projected = [];
+      for(let i=0;i<pts.length;i++){
+        const p = pts[i];
+        // rotate around X then Y
+        let x=p.x, y=p.y, z=p.z;
+
+        // X rot
+        const cxr = Math.cos(rotX), sxr = Math.sin(rotX);
+        let y1 = y*cxr - z*sxr;
+        let z1 = y*sxr + z*cxr;
+
+        // Y rot
+        const cyr = Math.cos(rotY), syr = Math.sin(rotY);
+        let x2 = x*cyr + z1*syr;
+        let z2 = -x*syr + z1*cyr;
+
+        // subtle breathing / swirl
+        const swirl = Math.sin(t + (i%200)*0.02) * 0.02;
+        x2 += swirl * (x2);
+        y1 += swirl * (y1);
+
+        // perspective
+        const depth = (z2 + 1.6); // 0.6..2.6
+        const px = cx + x2 * (R / depth);
+        const py = cy + y1 * (R / depth);
+
+        const size = (p.s * 1.10) * (1.0 / depth);
+        projected.push({px,py,z:z2,size});
+      }
+
+      // draw far -> near
+      projected.sort((a,b)=>a.z-b.z);
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+
+      for(const q of projected){
+        const alpha = 0.10 + ((q.z+1)/2)*0.65; // near brighter
+        const r = Math.max(0.7, q.size*2.2);
+
+        ctx.beginPath();
+        ctx.arc(q.px, q.py, r, 0, Math.PI*2);
+        ctx.fillStyle = `hsla(${cur.h}, ${cur.s}%, ${cur.l}%, ${alpha})`;
+        ctx.fill();
+      }
+
+      // highlight specular
+      ctx.beginPath();
+      ctx.arc(cx - R*0.22, cy - R*0.22, R*0.42, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,.05)`;
+      ctx.shadowColor = `hsla(${cur.h}, ${cur.s}%, ${cur.l}%, .35)`;
+      ctx.shadowBlur = 26;
+      ctx.fill();
+
+      ctx.restore();
+
+      requestAnimationFrame(draw);
     }
-
-    requestAnimationFrame(draw);
-  }
-
-  // start
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  resize();
-  requestAnimationFrame(draw);
-</script>
-
+    draw();
+  </script>
 </body>
 </html>
+
