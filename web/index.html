@@ -1,4 +1,6 @@
-<!doctype html>
+git add web/index.html
+git commit -m "online count ui + vip next to settings"
+git push<!doctype html>
 <html lang="uz">
 <head>
   <meta charset="utf-8"/>
@@ -252,7 +254,7 @@
         <div class="dot" id="dot"></div>
         <div>
           <b id="liveText">LIVE</b>
-          <span id="statusText">Signal ready</span>
+          <span id="statusText"><span id="onlineCount">0</span> online</span>
         </div>
       </div>
     </div>
@@ -275,7 +277,7 @@
           <div class="btn" onclick="openPage('ai')"><b>🤖 AI Analiz</b><span>Keyin ulanadi</span></div>
           <div class="btn" onclick="openPage('edu')"><b>📚 Darslik & Stat</b><span>Grafik/darslar</span></div>
           <div class="btn" onclick="openPage('settings')"><b>⚙️ Setting</b><span>Sozlamalar</span></div>
-          <div class="btn big" onclick="openPage('vip')"><b>👑 Referal chat • VIP</b><span>Faqat ruxsat bilan (keyin tekshiramiz)</span></div>
+          <div class="btn" onclick="openPage('vip')"><b>👑 Referal chat • VIP</b><span>Faqat ruxsat bilan (keyin tekshiramiz)</span></div>
           <div class="btn big" onclick="openPage('help')"><b>🆘 Help</b><span>Yordam va qo‘llanma</span></div>
         </div>
       </div>
@@ -380,6 +382,20 @@
         dot.style.animationDuration = '1.8s';
       }
     });
-  </script>
+// ===== ONLINE COUNT (backenddan olib turadi) =====
+// Render backend URL: shu yerga o'zingni URL'ingni yozasan:
+const API_BASE = "https://SENING-SERVIS.onrender.com"; // <-- o'zgartirasan
+const ONLINE_EL = document.getElementById("onlineCount");
+
+async function refreshOnline(){
+  try{
+    const r = await fetch(API_BASE + "/api/online");
+    const j = await r.json();
+    if(typeof j.online === "number") ONLINE_EL.textContent = j.online;
+  }catch(e){}
+}
+refreshOnline();
+setInterval(refreshOnline, 6000);  
+</script>
 </body>
 </html>
