@@ -1,422 +1,293 @@
-git add web/index.html
-git commit -m "online count ui + vip next to settings"
-git pushgit add web/index.html
-git commit -m "online count ui + vip next to settings"
-git push<!doctype html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Pocket Option Signal</title>
-  <style>
-    :root{
-      --bg:#070b10;
-      --bg2:#05070b;
-      --card: rgba(18,20,26,.78);
-      --stroke: rgba(255,255,255,.10);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.70);
-      --muted2: rgba(255,255,255,.55);
-      --shadow: 0 28px 80px rgba(0,0,0,.55);
-      --r: 22px;
-      --accent: #21b5ff;
-      --good: #2cff9b;
-      --warn: #ffcc33;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pocket Option Signal</title>
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(900px 480px at 20% 10%, rgba(33,181,255,.14), transparent 60%),
-        radial-gradient(900px 520px at 85% 15%, rgba(110,80,255,.10), transparent 62%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      color: var(--text);
-      overflow-x:hidden;
-    }
+<style>
+:root{
+  --bg:#0b0f16;
+  --card:#111826;
+  --stroke:rgba(255,255,255,.08);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.6);
+}
 
-    /* ===== TOP STATUS BAR (NO 3D) ===== */
-    .topBar{
-      position: sticky;
-      top: 0;
-      z-index: 5;
-      padding: 14px 14px 10px;
-      background: linear-gradient(180deg, rgba(7,11,16,.92), rgba(7,11,16,.70));
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
+*{box-sizing:border-box;font-family:system-ui,-apple-system,BlinkMacSystemFont}
 
-    .topRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      max-width: 560px;
-      margin: 0 auto;
-    }
+body{
+  margin:0;
+  background:radial-gradient(1200px 600px at 50% -20%, #123d63 0%, #070a12 60%);
+  color:var(--text);
+}
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
+/* ===== TOP BAR ===== */
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 16px;
+  background:linear-gradient(180deg,#0e1524,#0a0f19);
+  border-bottom:1px solid var(--stroke);
+}
 
-    .logo{
-      width:40px;height:40px;
-      border-radius: 14px;
-      background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.18), rgba(255,255,255,.06) 55%, rgba(0,0,0,.25));
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 10px 24px rgba(0,0,0,.35);
-      display:flex;align-items:center;justify-content:center;
-      font-size:18px;
-      flex:0 0 auto;
-    }
+.app{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.logo{
+  width:36px;height:36px;
+  border-radius:12px;
+  background:#1a2236;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;
+}
+.live{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(0,0,0,.35);
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#1aff6b;
+}
 
-    .brandText{
-      display:flex;
-      flex-direction:column;
-      min-width:0;
-    }
-    .brandText b{
-      font-size: 15px;
-      letter-spacing:.2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .brandText span{
-      font-size: 12px;
-      color: var(--muted2);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      margin-top:2px;
-    }
+/* ===== APP ===== */
+.wrap{
+  max-width:460px;
+  margin:18px auto 40px;
+  padding:0 14px;
+}
 
-    .statusChip{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 10px 24px rgba(0,0,0,.22);
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      flex:0 0 auto;
-    }
+.card{
+  background:linear-gradient(180deg,#141c2b,#0e1420);
+  border-radius:26px;
+  border:1px solid var(--stroke);
+  padding:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);
+}
 
-    .dot{
-      width:10px;height:10px;border-radius:999px;
-      background: var(--good);
-      box-shadow: 0 0 0 rgba(44,255,155,.0);
-      animation: pulse 1.35s ease-in-out infinite;
-    }
-    @keyframes pulse{
-      0%   { box-shadow: 0 0 0 0 rgba(44,255,155,.0); opacity: .9; transform: scale(1); }
-      40%  { box-shadow: 0 0 0 8px rgba(44,255,155,.15); opacity: 1; transform: scale(1.08); }
-      100% { box-shadow: 0 0 0 0 rgba(44,255,155,.0); opacity: .88; transform: scale(1); }
-    }
+/* ===== HEADER ===== */
+.head{
+  background:linear-gradient(135deg,#2a7cff,#1bb1ff);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+}
+.head h1{margin:0;font-size:20px}
+.head p{margin:6px 0 0;font-size:13px;opacity:.9}
 
-    .statusChip b{ font-size: 12.5px; letter-spacing:.4px; }
-    .statusChip span{ font-size: 12px; color: var(--muted); }
+/* ===== MENU GRID ===== */
+.menu{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
 
-    /* ===== MAIN WRAP ===== */
-    .wrap{
-      max-width: 560px;
-      margin: 0 auto;
-      padding: 14px 14px 26px;
-    }
+/* ===== BUTTON ===== */
+.btn{
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:14px;
+  cursor:pointer;
+  transition:.15s;
+}
+.btn:active{transform:translateY(1px)}
+.btn b{display:block;font-size:15px}
+.btn span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 
-    .card{
-      border-radius: var(--r);
-      background: linear-gradient(180deg, rgba(18,20,26,.82), rgba(12,14,18,.70));
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      overflow:hidden;
-    }
-
-    .head{
-      padding: 16px 16px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .title{
-      margin:0;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing:.2px;
-    }
-    .sub{
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: var(--muted);
-      line-height:1.35;
-    }
-
-    .menu{
-      padding: 14px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .btn{
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      padding: 14px 14px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 12px 26px rgba(0,0,0,.25);
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      position:relative;
-      overflow:hidden;
-    }
-    .btn::before{
-      content:"";
-      position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 20%, rgba(33,181,255,.16), transparent 55%);
-      pointer-events:none;
-    }
-    .btn:hover{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.14); }
-    .btn:active{ transform: translateY(2px) scale(.99); }
-
-    .btn b{
-      display:block;
-      font-size: 15px;
-      font-weight: 900;
-      margin-bottom: 5px;
-      letter-spacing:.2px;
-    }
-    .btn span{
-      display:block;
-      font-size: 12.5px;
-      color: var(--muted);
-    }
-/* ===== VIP (RED + GOLD) ===== */
+/* ===== VIP BUTTON (RED + GOLD) ===== */
 .btn.vip{
-  background: linear-gradient(135deg, rgba(255, 200, 0, .22), rgba(255, 40, 40, .18));
-  border: 1px solid rgba(255, 200, 0, .35);
-  box-shadow: 0 10px 26px rgba(255, 200, 0, .10), 0 10px 26px rgba(255, 40, 40, .08);
+  background:linear-gradient(135deg,#7a0000,#ffcc33,#b8860b);
+  border:1px solid rgba(255,215,0,.6);
+  box-shadow:
+    0 0 12px rgba(255,215,0,.45),
+    inset 0 0 18px rgba(255,255,255,.2);
+}
+.btn.vip b,
+.btn.vip span{color:#fff}
+
+/* ===== BIG ===== */
+.btn.big{grid-column:1 / -1}
+
+/* ===== PAGES ===== */
+.page{display:none}
+.page.active{display:block}
+
+.pageBox{
+  background:rgba(0,0,0,.25);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:14px;
+  margin-bottom:12px;
 }
 
-.btn.vip:hover{
-  background: linear-gradient(135deg, rgba(255, 200, 0, .30), rgba(255, 40, 40, .25));
-  border-color: rgba(255, 200, 0, .55);
+.back{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  padding:10px 14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  cursor:pointer;
 }
-
-.btn.vip b{
-  color: #fff;
-  text-shadow: 0 1px 0 rgba(0,0,0,.35);
-}
-
-.btn.vip span{
-  color: rgba(255,255,255,.78);
-}    
-.big{ grid-column: 1 / -1; }
-
-    /* ===== PAGES ===== */
-    .page{ display:none; }
-    .page.active{ display:block; }
-
-    .pageBox{
-      padding: 14px;
-      margin: 14px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.22);
-      border: 1px solid rgba(255,255,255,.10);
-      color: rgba(255,255,255,.86);
-      line-height: 1.45;
-    }
-
-    .back{
-      margin: 0 14px 14px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      cursor:pointer;
-      user-select:none;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      opacity:.9;
-    }
-    .back:active{ transform: translateY(1px); opacity:1; }
-
-    /* small */
-    @media (max-width:360px){
-      .menu{ grid-template-columns: 1fr; }
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
-  <!-- TOP STATUS -->
-  <div class="topBar">
-    <div class="topRow">
-      <div class="brand">
-        <div class="logo">PO</div>
-        <div class="brandText">
-          <b>Pocket Option Signal</b>
-          <span>Mini App • Menu</span>
-        </div>
-      </div>
-
-      <div class="statusChip" id="statusChip" title="Status">
-        <div class="dot" id="dot"></div>
-        <div>
-          <b id="liveText">LIVE</b>
-          <span id="statusText"><span id="onlineCount">0</span> online</span>
-        </div>
-      </div>
+<!-- TOP -->
+<div class="top">
+  <div class="app">
+    <div class="logo">PO</div>
+    <div>
+      <b>Pocket Option Signal</b><br>
+      <small style="color:var(--muted)">Mini App · Menu</small>
     </div>
   </div>
+  <div class="live">
+    <div class="dot"></div>
+    <b>LIVE</b>
+    <span id="online">23 online</span>
+  </div>
+</div>
 
-  <!-- APP -->
-  <div class="wrap">
-    <div class="card">
+<!-- APP -->
+<div class="wrap">
+<div class="card">
 
-      <!-- MENU -->
-      <div class="page active" id="menu">
-        <div class="head">
-          <div class="title">Menu</div>
-          <div class="sub">Bo‘lim tanlang. (3D yo‘q — tez va stabil ishlaydi.)</div>
-        </div>
-
-        <div class="menu">
-          <div class="btn" onclick="openPage('signal')"><b>📈 Pocket Signal</b><span>Signal sahifasi</span></div>
-          <div class="btn" onclick="openPage('chat')"><b>💬 Pocket Chat</b><span>Ilova ichida chat</span></div>
-          <div class="btn" onclick="openPage('ai')"><b>🤖 AI Analiz</b><span>Keyin ulanadi</span></div>
-          <div class="btn" onclick="openPage('edu')"><b>📚 Darslik & Stat</b><span>Grafik/darslar</span></div>
-          <div class="btn" onclick="openPage('settings')"><b>⚙️ Setting</b><span>Sozlamalar</span></div>
-          <div class="btn vip" onclick="openPage('vip')"><b>👑 Referal chat • VIP</b><span>Faqat ruxsat bilan (keyin tekshiramiz)</span></div>
-          <div class="btn big" onclick="openPage('help')"><b>🆘 Help</b><span>Yordam va qo‘llanma</span></div>
-        </div>
-      </div>
-
-      <!-- SIGNAL -->
-      <div class="page" id="signal">
-        <div class="pageBox">
-          <b>📈 Pocket Signal</b><br/>
-          Bu yerga signal UI’ni keyin qo‘shamiz.
-        </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      </div>
-
-      <!-- CHAT -->
-      <div class="page" id="chat">
-        <div class="pageBox">
-          <b>💬 Pocket Chat</b><br/>
-          Bu yerga chat (API/iframe) keyin ulanadi.
-        </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      </div>
-
-      <!-- AI -->
-      <div class="page" id="ai">
-        <div class="pageBox">
-          <b>🤖 AI Analiz</b><br/>
-          Keyin ulanadi.
-        </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      </div>
-
-      <!-- EDU -->
-      <div class="page" id="edu">
-        <div class="pageBox">
-          <b>📚 Darslik & Stat</b><br/>
-          Grafiklar va darsliklar shu yerda bo‘ladi.
-        </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      </div>
-
-      <!-- SETTINGS -->
-      <div class="page" id="settings">
-        <div class="pageBox">
-          <b>⚙️ Setting</b><br/>
-          Dark/light, til, profil — keyin qo‘shamiz.
-        </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      </div>
-      <!-- VIP -->
-      <div class="page" id="vip">
-        <div class="pageBox">
-          <b>👑 Referal chat • VIP</b><br/>
-          Bu bo‘limga keyin “referal ro‘yxat tekshirish” qo‘shamiz.
-        </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      </div>
-
-      <!-- HELP -->
-      <div class="page" id="help">
-        <div class="pageBox">
-          <b>🆘 Help</b><br/>
-          Yordam bo‘limi.
-        </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      </div>
-
-    </div>
+<!-- MENU -->
+<div class="page active" id="menu">
+  <div class="head">
+    <h1>Pocket Option Signal</h1>
+    <p>Bo‘lim tanlang. (3D yo‘q — tez va stabil)</p>
   </div>
 
-  <script>
-    // ===== PAGE SWITCH =====
-    function openPage(id){
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      const el = document.getElementById(id);
-      if(el) el.classList.add('active');
-    }
+  <div class="menu">
+    <div class="btn" onclick="openPage('signal')">
+      <b>📈 Pocket Signal</b>
+      <span>Signal sahifasi</span>
+    </div>
 
-    // ===== LIVE CHIP: tap to toggle demo status =====
-    const chip = document.getElementById('statusChip');
-    const dot = document.getElementById('dot');
-    const liveText = document.getElementById('liveText');
-    const statusText = document.getElementById('statusText');
+    <div class="btn" onclick="openPage('chat')">
+      <b>💬 Pocket Chat</b>
+      <span>Ilova ichida chat</span>
+    </div>
 
-    let mode = 0; // 0 ready, 1 analyzing, 2 offline
-    chip.addEventListener('click', () => {
-      mode = (mode + 1) % 3;
-      if(mode === 0){
-        dot.style.background = 'var(--good)';
-        liveText.textContent = 'LIVE';
-        statusText.textContent = 'Signal ready';
-        dot.style.animationDuration = '1.35s';
-      } else if(mode === 1){
-        dot.style.background = 'var(--warn)';
-        liveText.textContent = 'WORK';
-        statusText.textContent = 'Analyzing…';
-        dot.style.animationDuration = '0.9s';
-      } else {
-        dot.style.background = '#ff4b4b';
-        liveText.textContent = 'OFF';
-        statusText.textContent = 'Offline';
-        dot.style.animationDuration = '1.8s';
-      }
-    });
-// ===== ONLINE COUNT (backenddan olib turadi) =====
-// Render backend URL: shu yerga o'zingni URL'ingni yozasan:
-const API_BASE = "https://SENING-SERVIS.onrender.com"; // <-- o'zgartirasan
-const ONLINE_EL = document.getElementById("onlineCount");
+    <div class="btn" onclick="openPage('ai')">
+      <b>🤖 AI Analiz</b>
+      <span>Keyin ulanadi</span>
+    </div>
 
-async function refreshOnline(){
-  try{
-    const r = await fetch(API_BASE + "/api/online");
-    const j = await r.json();
-    if(typeof j.online === "number") ONLINE_EL.textContent = j.online;
-  }catch(e){}
+    <div class="btn" onclick="openPage('edu')">
+      <b>📚 Darslik & Stat</b>
+      <span>Grafik / darslar</span>
+    </div>
+
+    <div class="btn" onclick="openPage('settings')">
+      <b>⚙️ Setting</b>
+      <span>Sozlamalar</span>
+    </div>
+
+    <div class="btn vip" onclick="openPage('vip')">
+      <b>👑 Referal chat · VIP</b>
+      <span>Faqat ruxsat bilan</span>
+    </div>
+
+    <div class="btn big" onclick="openPage('help')">
+      <b>🆘 Help</b>
+      <span>Yordam va qo‘llanma</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL -->
+<div class="page" id="signal">
+  <div class="pageBox">
+    <b>📈 Pocket Signal</b><br>
+    Bu yerga signal UI keyin qo‘shiladi.
+  </div>
+  <div class="back" onclick="openPage('menu')">⬅ Ortga</div>
+</div>
+
+<!-- CHAT -->
+<div class="page" id="chat">
+  <div class="pageBox">
+    <b>💬 Pocket Chat</b><br>
+    Chat keyin ulanadi.
+  </div>
+  <div class="back" onclick="openPage('menu')">⬅ Ortga</div>
+</div>
+
+<!-- AI -->
+<div class="page" id="ai">
+  <div class="pageBox">
+    <b>🤖 AI Analiz</b><br>
+    AI modul keyin qo‘shiladi.
+  </div>
+  <div class="back" onclick="openPage('menu')">⬅ Ortga</div>
+</div>
+
+<!-- EDU -->
+<div class="page" id="edu">
+  <div class="pageBox">
+    <b>📚 Darslik & Stat</b><br>
+    Grafik va darsliklar shu yerda bo‘ladi.
+  </div>
+  <div class="back" onclick="openPage('menu')">⬅ Ortga</div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="settings">
+  <div class="pageBox">
+    <b>⚙️ Setting</b><br>
+    Dark / Light va boshqa sozlamalar.
+  </div>
+  <div class="back" onclick="openPage('menu')">⬅ Ortga</div>
+</div>
+
+<!-- VIP -->
+<div class="page" id="vip">
+  <div class="pageBox">
+    <b>👑 VIP Referal Chat</b><br>
+    Bu bo‘lim faqat ruxsat bilan.
+  </div>
+  <div class="back" onclick="openPage('menu')">⬅ Ortga</div>
+</div>
+
+<!-- HELP -->
+<div class="page" id="help">
+  <div class="pageBox">
+    <b>🆘 Help</b><br>
+    Savollar va yordam shu yerda.
+  </div>
+  <div class="back" onclick="openPage('menu')">⬅ Ortga</div>
+</div>
+
+</div>
+</div>
+
+<script>
+function openPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
-refreshOnline();
-setInterval(refreshOnline, 6000);  
+
+// fake online count
+setInterval(()=>{
+  document.getElementById('online').innerText =
+    (20 + Math.floor(Math.random()*15)) + " online";
+},3000);
 </script>
+
 </body>
 </html>
