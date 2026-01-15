@@ -518,6 +518,15 @@
         Telegram.WebApp.expand();
       }
     }catch(e){}
+// FORCE Telegram context check
+window.onload = () => {
+  if (!window.Telegram || !Telegram.WebApp) {
+    alert("❌ Mini App Telegram ichida ochilmadi!\n\nBot ichidan oching.");
+  } else {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+  }
+};
   </script>
 </body>
 </html>
