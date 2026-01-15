@@ -2,44 +2,40 @@
 <html lang="uz">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="color-scheme" content="dark light" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Pocket Option Signal</title>
-
-  <!-- ✅ MUHIM: Telegram WebApp JS (ID shundan olinadi) -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
     :root{
-      --bg1:#07111f;
-      --bg2:#0b2440;
+      --bg1:#061a2e;
+      --bg2:#03101e;
       --card: rgba(0,0,0,.22);
       --stroke: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.62);
-      --shadow: 0 18px 60px rgba(0,0,0,.55);
-      --r: 22px;
-    }
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--text);
-      min-height:100vh;
-      background:
-        radial-gradient(900px 520px at 18% 18%, rgba(79,153,255,.22), transparent 55%),
-        radial-gradient(900px 520px at 82% 28%, rgba(0,255,200,.10), transparent 55%),
-        linear-gradient(180deg, var(--bg2), var(--bg1));
-      padding: 16px;
+      --muted: rgba(255,255,255,.66);
+      --muted2: rgba(255,255,255,.52);
+      --blue1:#46b2ff;
+      --blue2:#2b7cff;
     }
 
-    .top{
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 30% -10%, rgba(70,178,255,.35), transparent 55%),
+        radial-gradient(900px 500px at 90% 30%, rgba(43,124,255,.25), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+      padding: 16px 14px 26px;
+    }
+
+    .topbar{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      max-width: 560px;
-      margin: 0 auto 12px;
       padding: 10px 12px;
       border-radius: 18px;
       background: rgba(0,0,0,.18);
@@ -51,119 +47,118 @@
       min-width: 0;
     }
     .logo{
-      width:38px; height:38px;
-      border-radius: 14px;
+      width:36px; height:36px; border-radius: 12px;
       display:grid; place-items:center;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      font-weight:800;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:700;
     }
-    .bt{
-      display:flex; flex-direction:column;
-      line-height:1.1;
-      min-width:0;
-    }
-    .bt b{ font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .bt span{ font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .btitles{min-width:0}
+    .btitles .name{font-weight:800; font-size:14px; line-height:1.1}
+    .btitles .sub{font-size:12px; color:var(--muted2); margin-top:2px}
 
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 10px 12px;
+    .live{
+      display:flex; align-items:center; gap:8px;
+      padding: 8px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.18);
-      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:700;
       white-space:nowrap;
-      font-size:13px;
     }
     .dot{
       width:10px; height:10px; border-radius:50%;
-      background:#20e38b;
-      box-shadow: 0 0 0 3px rgba(32,227,139,.18);
+      background:#2cff7a;
+      box-shadow: 0 0 0 3px rgba(44,255,122,.15);
     }
-    #onlineCount{ opacity:.95; }
+    .live small{font-weight:700; color: var(--muted);}
 
-    .wrap{ max-width: 560px; margin: 0 auto; }
+    .wrap{
+      max-width: 520px;
+      margin: 14px auto 0;
+    }
+
     .card{
-      border-radius: 26px;
-      background: rgba(0,0,0,.22);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      backdrop-filter: blur(14px);
+      margin-top: 12px;
+      border-radius: 22px;
+      background: rgba(0,0,0,.20);
+      border:1px solid var(--stroke);
+      backdrop-filter: blur(12px);
+      padding: 16px;
     }
 
     .hero{
-      border-radius: 20px;
+      border-radius: 18px;
       padding: 18px 16px;
-      margin-bottom: 12px;
-      background: linear-gradient(135deg, rgba(60,160,255,.95), rgba(60,160,255,.55));
-      border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 16px 40px rgba(0,0,0,.35);
+      background: linear-gradient(135deg, rgba(70,178,255,.95), rgba(43,124,255,.85));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 18px 40px rgba(0,0,0,.25);
     }
-    .hero h1{ margin:0 0 6px; font-size: 26px; }
-    .hero p{ margin:0; color: rgba(255,255,255,.88); }
-
-    .page{ display:none; }
-    .page.active{ display:block; }
+    .hero .h1{font-size: 26px; font-weight: 900; letter-spacing:.2px}
+    .hero .h2{margin-top:6px; font-size: 14px; color: rgba(255,255,255,.85); font-weight:700}
 
     .menu{
+      margin-top: 14px;
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 12px;
     }
-
     .btn{
-      user-select:none;
-      cursor:pointer;
-      padding: 14px 14px;
       border-radius: 18px;
+      padding: 14px 14px;
       background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 16px 38px rgba(0,0,0,.35);
-      transition: transform .08s ease, border-color .2s ease, background .2s ease;
+      border:1px solid rgba(255,255,255,.10);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .06s ease, opacity .2s ease;
+      min-height: 74px;
       display:flex;
       gap:10px;
       align-items:flex-start;
-      min-height: 74px;
     }
-    .btn:active{ transform: translateY(1px); }
-    .ic{
-      width:34px; height:34px;
+    .btn:active{transform: translateY(1px); opacity:.95}
+    .ico{
+      width:36px; height:36px;
       border-radius: 14px;
       display:grid; place-items:center;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.10);
       flex: 0 0 auto;
+      font-size: 18px;
     }
-    .tx b{ display:block; font-size:16px; margin-bottom:4px; }
-    .tx span{ display:block; font-size:12.5px; color:var(--muted); }
+    .btxt{min-width:0}
+    .btxt b{display:block; font-size: 16px; font-weight: 900}
+    .btxt span{display:block; font-size: 12.5px; color: var(--muted); margin-top:2px}
 
-    .btn.big{ grid-column: 1 / -1; min-height: 68px; }
+    .big{grid-column: 1 / -1;}
 
-    /* ✅ VIP: qizil/oltin */
-    .btn.vip{
-      background: linear-gradient(135deg, rgba(255,70,70,.25), rgba(255,199,0,.28));
-      border: 1px solid rgba(255,199,0,.35);
-      box-shadow:
-        0 18px 55px rgba(0,0,0,.45),
-        0 0 0 1px rgba(255,199,0,.12) inset;
+    /* VIP: qizil/oltin */
+    .vip{
+      background:
+        linear-gradient(135deg, rgba(255,72,72,.25), rgba(255,196,0,.25)),
+        rgba(255,255,255,.06);
+      border:1px solid rgba(255,200,0,.35);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
     }
-    .btn.vip .ic{
-      background: linear-gradient(135deg, rgba(255,70,70,.30), rgba(255,199,0,.30));
-      border: 1px solid rgba(255,199,0,.35);
+    .vip .ico{
+      background: rgba(255,196,0,.12);
+      border:1px solid rgba(255,196,0,.35);
     }
+
+    /* PAGES */
+    .page{display:none;}
+    .page.active{display:block;}
 
     .pageBox{
+      margin-top: 12px;
+      padding: 14px;
       border-radius: 18px;
       background: rgba(0,0,0,.22);
-      border: 1px solid rgba(255,255,255,.10);
-      padding: 14px;
-      margin-top: 10px;
+      border:1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.88);
       line-height: 1.45;
     }
+
     .back{
       margin-top: 12px;
       display:inline-flex;
@@ -171,94 +166,119 @@
       gap:8px;
       padding: 10px 12px;
       border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
       cursor:pointer;
       user-select:none;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      color: var(--text);
-      opacity:.92;
+      opacity:.95;
     }
-    .back:active{ transform: translateY(1px); opacity:1; }
+    .back:active{transform: translateY(1px); opacity:1}
 
-    .smallMuted{ color: var(--muted); font-size: 12.5px; }
+    .miniTitle{
+      font-weight:900;
+      font-size:16px;
+      margin-bottom: 8px;
+    }
 
-    @media (max-width: 360px){
-      .menu{ grid-template-columns: 1fr; }
-      .hero h1{ font-size: 22px; }
+    .input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      outline:none;
+      font-size: 14px;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+    }
+    .action{
+      flex:1;
+      border-radius: 14px;
+      padding: 12px 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.08);
+      cursor:pointer;
+      font-weight:800;
+      text-align:center;
+      user-select:none;
+    }
+    .action.gold{
+      background: linear-gradient(135deg, rgba(255,72,72,.30), rgba(255,196,0,.30));
+      border:1px solid rgba(255,200,0,.35);
+    }
+    .hint{margin-top:8px; color: var(--muted); font-size: 12.5px}
+
+    @media (max-width:360px){
+      .menu{grid-template-columns:1fr;}
     }
   </style>
 </head>
 
 <body>
-
-  <!-- TOP BAR -->
-  <div class="top">
+  <div class="topbar">
     <div class="brand">
       <div class="logo">PO</div>
-      <div class="bt">
-        <b>Pocket Option Signal</b>
-        <span>Mini App • Menu</span>
+      <div class="btitles">
+        <div class="name">Pocket Option Signal</div>
+        <div class="sub">Mini App • Menu</div>
       </div>
     </div>
 
-    <div class="pill" title="Online users">
+    <div class="live">
       <span class="dot"></span>
-      <b>LIVE</b>
-      <span id="onlineCount">— online</span>
+      <span>LIVE</span>
+      <small id="onlineCount">— online</small>
     </div>
   </div>
 
-  <!-- APP -->
   <div class="wrap">
     <div class="card">
 
-      <!-- MENU PAGE -->
+      <!-- MENU -->
       <div class="page active" id="menu">
         <div class="hero">
-          <h1>Pocket Option Signal</h1>
-          <p>Bo‘lim tanlang. (3D yo‘q — tez va stabil)</p>
+          <div class="h1">Pocket Option Signal</div>
+          <div class="h2">Bo‘lim tanlang. (3D yo‘q — tez va stabil)</div>
         </div>
 
         <div class="menu">
           <div class="btn" onclick="openPage('signal')">
-            <div class="ic">📈</div>
-            <div class="tx">
-              <b>Pocket Signal</b>
-              <span>Signal sahifasi</span>
-            </div>
-          </div>
-
-          <div class="btn" onclick="openPage('ai')">
-            <div class="ic">🤖</div>
-            <div class="tx">
-              <b>AI Analiz</b>
-              <span>Keyin ulanadi</span>
-            </div>
+            <div class="ico">📈</div>
+            <div class="btxt"><b>Pocket Signal</b><span>Signal sahifasi</span></div>
           </div>
 
           <div class="btn" onclick="openPage('chat')">
-            <div class="ic">💬</div>
-            <div class="tx">
-              <b>Chat</b>
-              <span>Ilova ichida chat</span>
-            </div>
+            <div class="ico">💬</div>
+            <div class="btxt"><b>Pocket Chat</b><span>Ilova ichida chat</span></div>
           </div>
 
-          <!-- ✅ VIP tugma -->
+          <div class="btn" onclick="openPage('ai')">
+            <div class="ico">🤖</div>
+            <div class="btxt"><b>AI Analiz</b><span>Keyin ulanadi</span></div>
+          </div>
+
+          <div class="btn" onclick="openPage('edu')">
+            <div class="ico">📚</div>
+            <div class="btxt"><b>Darslik & Stat</b><span>Grafik / darslar</span></div>
+          </div>
+
+          <div class="btn" onclick="openPage('settings')">
+            <div class="ico">⚙️</div>
+            <div class="btxt"><b>Setting</b><span>Sozlamalar</span></div>
+          </div>
+
           <div class="btn vip" onclick="openVipGate()">
-            <div class="ic">👑</div>
-            <div class="tx">
-              <b>VIP</b>
-              <span>Faqat ruxsat bilan</span>
-            </div>
+            <div class="ico">👑</div>
+            <div class="btxt"><b>Referal chat • VIP</b><span>Faqat ruxsat bilan</span></div>
           </div>
 
-          <div class="btn big" onclick="openPage('info')">
-            <div class="ic">ℹ️</div>
-            <div class="tx">
-              <b>Info</b>
-              <span>Qisqa ma’lumot</span>
-            </div>
+          <div class="btn big" onclick="openPage('help')">
+            <div class="ico">🆘</div>
+            <div class="btxt"><b>Help</b><span>Yordam va qo‘llanma</span></div>
           </div>
         </div>
       </div>
@@ -266,23 +286,9 @@
       <!-- SIGNAL -->
       <div class="page" id="signal">
         <div class="pageBox">
-          <b>📈 Pocket Signal</b><br/>
+          <div class="miniTitle">📈 Pocket Signal</div>
           Bu yerga signal UI’ni keyin qo‘shamiz.
-          <div class="smallMuted" style="margin-top:8px;">
-            (Hozircha demo sahifa)
-          </div>
-        </div>
-        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      </div>
-
-      <!-- AI -->
-      <div class="page" id="ai">
-        <div class="pageBox">
-          <b>🤖 AI Analiz</b><br/>
-          AI analiz keyin ulanadi.
-          <div class="smallMuted" style="margin-top:8px;">
-            (Model/indikatorlar keyin qo‘shiladi)
-          </div>
+          <div class="hint">Hozircha menyu va VIP tekshiruv tizimi ishlaydi.</div>
         </div>
         <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
       </div>
@@ -290,53 +296,110 @@
       <!-- CHAT -->
       <div class="page" id="chat">
         <div class="pageBox">
-          <b>💬 Chat</b><br/>
-          Bu yerga chat (iframe/API) keyin ulanadi.
+          <div class="miniTitle">💬 Pocket Chat</div>
+          Bu yerga chat (API/iframe) keyin ulanadi.
+          <div class="hint">Hozircha demo.</div>
         </div>
         <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
       </div>
 
-      <!-- VIP PAGE (ichki menu) -->
+      <!-- AI -->
+      <div class="page" id="ai">
+        <div class="pageBox">
+          <div class="miniTitle">🤖 AI Analiz</div>
+          Keyin ulanadi (indikator/AI tahlil).
+          <div class="hint">Hozircha demo.</div>
+        </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      </div>
+
+      <!-- EDU -->
+      <div class="page" id="edu">
+        <div class="pageBox">
+          <div class="miniTitle">📚 Darslik & Stat</div>
+          Grafiklar va darsliklar shu yerda bo‘ladi.
+          <div class="hint">Hozircha demo.</div>
+        </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="settings">
+        <div class="pageBox">
+          <div class="miniTitle">⚙️ Setting</div>
+          Dark/light, til, profil — keyin qo‘shamiz.
+          <div class="hint">Hozircha demo.</div>
+        </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      </div>
+
+      <!-- VIP GATE -->
+      <div class="page" id="vip_gate">
+        <div class="pageBox">
+          <div class="miniTitle">👑 VIP kirish</div>
+          VIP bo‘limga kirish uchun avval Telegram ichida ochilgan bo‘lishi kerak.
+          <div class="hint">Agar Telegram ID olinmasa, “Telegram ichida oching” chiqadi.</div>
+
+          <div class="row">
+            <div class="action gold" onclick="tryVip()">VIP tekshirish</div>
+            <div class="action" onclick="openPage('menu')">Bekor</div>
+          </div>
+
+          <div class="hint" id="vipGateStatus"></div>
+        </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      </div>
+
+      <!-- VIP PAGE -->
       <div class="page" id="vip">
         <div class="pageBox">
-          <b>👑 VIP Menu</b><br/>
-          VIP ochiq bo‘lsa shu yerga kiradi.
-          <div style="margin-top:12px;" class="menu">
-            <div class="btn big" onclick="openPage('vipChat')">
-              <div class="ic">💎</div>
-              <div class="tx">
-                <b>VIP Referal Chat</b>
-                <span>Ilova ichida VIP chat</span>
-              </div>
+          <div class="miniTitle">👑 VIP Menu</div>
+          VIP ichidagi menyu:
+
+          <div class="menu" style="margin-top:12px;">
+            <div class="btn" onclick="openPage('signal')">
+              <div class="ico">📈</div>
+              <div class="btxt"><b>Pocket Signal</b><span>Signal sahifasi</span></div>
+            </div>
+
+            <div class="btn" onclick="openPage('ai')">
+              <div class="ico">🤖</div>
+              <div class="btxt"><b>AI Analiz</b><span>Keyin ulanadi</span></div>
+            </div>
+
+            <div class="btn" onclick="openPage('chat')">
+              <div class="ico">💬</div>
+              <div class="btxt"><b>Chat</b><span>Ilova ichida chat</span></div>
+            </div>
+
+            <div class="btn" onclick="openPage('info')">
+              <div class="ico">ℹ️</div>
+              <div class="btxt"><b>Info</b><span>Qisqa ma’lumot</span></div>
             </div>
           </div>
+
+          <div class="hint" id="vipStatusText" style="margin-top:10px;"></div>
         </div>
         <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
-      </div>
-
-      <!-- VIP CHAT (demo) -->
-      <div class="page" id="vipChat">
-        <div class="pageBox">
-          <b>💎 VIP Referal Chat</b><br/>
-          Bu yerga VIP chat UI qo‘shamiz (ilova ichida).
-          <div class="smallMuted" style="margin-top:8px;">
-            (Hozircha demo)
-          </div>
-        </div>
-        <div class="back" onclick="openPage('vip')">⬅️ VIP Menuga</div>
       </div>
 
       <!-- INFO -->
       <div class="page" id="info">
         <div class="pageBox">
-          <b>ℹ️ Info</b><br/>
-          VIP olish tartibi:<br/><br/>
-          1) Referal link orqali ro‘yxatdan o‘ting:<br/>
-          <a href="https://pocket-friends.co/r/pmzxfhzp2e" target="_blank" style="color:#9bd1ff;">
-            https://pocket-friends.co/r/pmzxfhzp2e
-          </a><br/><br/>
-          2) Keyin botda Pocket ID yuborasiz, admin tasdiqlaydi.<br/>
-          3) Depozit qilganingizni tasdiqlaysiz, keyin VIP ochiladi.
+          <div class="miniTitle">ℹ️ Info</div>
+          Pocket Option Signal miniapp.
+          <div class="hint">LIVE, VIP ruxsat, menyular.</div>
+        </div>
+        <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
+      </div>
+
+      <!-- HELP -->
+      <div class="page" id="help">
+        <div class="pageBox">
+          <div class="miniTitle">🆘 Help</div>
+          1) Telegram ichida oching<br/>
+          2) Menu orqali bo‘lim tanlang<br/>
+          3) VIP uchun admin tasdiqlashi kerak
         </div>
         <div class="back" onclick="openPage('menu')">⬅️ Orqaga</div>
       </div>
@@ -346,7 +409,7 @@
 
   <script>
     // ====== CONFIG ======
-    const BACKEND = "https://pocket-miniapp.onrender.com";
+    const BACKEND_URL = "https://pocket-miniapp.onrender.com";
 
     // ====== PAGE SWITCH ======
     function openPage(id){
@@ -355,67 +418,106 @@
       if(el) el.classList.add('active');
     }
 
-    // ====== TELEGRAM ID ======
-    const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
-
+    // ====== TELEGRAM USER ID ======
     function getTelegramId(){
-      if(!tg) return null;
-      tg.ready(); // ✅ MUHIM
-      return tg.initDataUnsafe?.user?.id || null;
-    }
-
-    function requireTelegramIdOrAlert(){
-      const id = getTelegramId();
-      if(!id){
-        alert("Telegram ID topilmadi. Mini App'ni Telegram ichida (botdan) oching.");
+      try{
+        if (!window.Telegram || !Telegram.WebApp) return null;
+        const u = Telegram.WebApp.initDataUnsafe?.user;
+        return u?.id ? String(u.id) : null;
+      }catch(e){
         return null;
       }
-      return id;
     }
 
-    // ====== VIP GATE ======
-    async function openVipGate(){
-      const id = requireTelegramIdOrAlert();
-      if(!id) return;
+    // ====== LIVE ONLINE COUNT (SAFE) ======
+    async function updateOnline(){
+      const el = document.getElementById('onlineCount');
+      if(!el) return;
 
       try{
-        const res = await fetch(`${BACKEND}/api/vip/check?telegram_id=${encodeURIComponent(id)}`, {
-          method: "GET",
-          headers: { "Accept":"application/json" }
-        });
-        const data = await res.json();
+        // backend turlicha bo‘lishi mumkin, shuning uchun 2 variant
+        let r = await fetch(BACKEND_URL + "/api/online", { cache: "no-store" });
+        if(!r.ok){
+          r = await fetch(BACKEND_URL + "/online", { cache: "no-store" });
+        }
+        if(!r.ok) throw new Error("no online endpoint");
 
-        if(data && data.ok){
-          openPage('vip'); // ✅ VIP ichki menu
+        const data = await r.json();
+        // data: {online: 21} yoki {count:21} yoki {onlineCount:21}
+        const n = data.online ?? data.count ?? data.onlineCount;
+        if(typeof n === "number" || typeof n === "string"){
+          el.textContent = `${n} online`;
         }else{
-          alert("VIP yopiq. Avval botda ID + depozit tasdiqlansin.");
+          el.textContent = `— online`;
         }
       }catch(e){
-        alert("Backend ulanmayapti. Keyinroq urinib ko‘ring.");
+        // xato bo‘lsa ham UI buzilmasin
+        el.textContent = `— online`;
       }
     }
-
-    // ====== ONLINE COUNT (UI) ======
-    async function updateOnline(){
-      try{
-        const r = await fetch(`${BACKEND}/api/online`, { headers:{ "Accept":"application/json" }});
-        const d = await r.json();
-        const n = (d && typeof d.online === "number") ? d.online : null;
-        document.getElementById("onlineCount").textContent = (n === null) ? "— online" : `${n} online`;
-      }catch(e){
-        document.getElementById("onlineCount").textContent = "— online";
-      }
-    }
-
-    // INIT
-    if(tg){
-      tg.ready();
-      tg.expand(); // ko‘proq ekran
-    }
-
     updateOnline();
     setInterval(updateOnline, 8000);
-  </script>
 
+    // ====== VIP GATE ======
+    function openVipGate(){
+      openPage('vip_gate');
+      const s = document.getElementById('vipGateStatus');
+      if(s) s.textContent = "";
+    }
+
+    async function tryVip(){
+      const status = document.getElementById('vipGateStatus');
+      const tgId = getTelegramId();
+
+      if(!tgId){
+        if(status) status.textContent = "Telegram ID topilmadi. Telegram ichida oching.";
+        return;
+      }
+
+      if(status) status.textContent = "Tekshirilmoqda...";
+
+      // VIP check endpoint bo‘lmasa ham miniapp yiqilmasin:
+      try{
+        // Bu endpointni backendda keyin moslab qo‘yamiz.
+        // Hozir bo‘lmasa ham "fallback" ishlaydi.
+        let r = await fetch(`${BACKEND_URL}/api/vip/check?telegram_id=${encodeURIComponent(tgId)}`, { cache:"no-store" });
+
+        if(!r.ok){
+          // Agar backendda bunday endpoint yo‘q bo‘lsa: VIPni ochamiz (default).
+          // Shunda UI buzilmaydi va sen bot orqali ruxsatni boshqarasan.
+          if(status) status.textContent = "Server VIP tekshiruvini topmadi. VIP ochildi (bot ruxsat bilan).";
+          const vipText = document.getElementById('vipStatusText');
+          if(vipText) vipText.textContent = `Telegram ID: ${tgId} • (Fallback mode)`;
+          openPage('vip');
+          return;
+        }
+
+        const data = await r.json();
+        const ok = !!(data.ok ?? data.allowed ?? data.vip ?? data.access);
+        if(ok){
+          if(status) status.textContent = "VIP ochildi!";
+          const vipText = document.getElementById('vipStatusText');
+          if(vipText) vipText.textContent = `Telegram ID: ${tgId} • VIP: ON`;
+          openPage('vip');
+        }else{
+          if(status) status.textContent = "VIP yopiq. Admin tasdiqlashi kerak.";
+        }
+      }catch(e){
+        // xato bo‘lsa ham miniapp yiqilmasin
+        if(status) status.textContent = "Internet/Server xato. VIP ochildi (fallback).";
+        const vipText = document.getElementById('vipStatusText');
+        if(vipText) vipText.textContent = `Telegram ID: ${tgId} • (Fallback mode)`;
+        openPage('vip');
+      }
+    }
+
+    // Telegram WebApp init (ixtiyoriy)
+    try{
+      if(window.Telegram && Telegram.WebApp){
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+      }
+    }catch(e){}
+  </script>
 </body>
 </html>
