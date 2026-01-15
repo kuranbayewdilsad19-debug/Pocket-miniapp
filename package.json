@@ -1,0 +1,9 @@
+{
+  "name": "pocket-miniapp-bot",
+  "version": "1.0.0",
+  "private": true,
+  "main": "app.py",
+  "scripts": {
+    "start": "python app.py"
+  }
+}
